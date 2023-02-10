@@ -1,0 +1,80 @@
+.wrapper {
+    // background-color: aqua;
+    width: 100%;
+    position: absolute;
+    height: fit-content;
+}
+
+.listContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    // height: 800px;
+    overflow: hidden;
+}
+
+.episodeWrapper {
+    border: 1px solid #ccc;
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+
+    .headerEpisode {
+        display: flex;
+        justify-content: space-between;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+
+        .headerListEpisode,
+        .headerComment {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--textColor);
+        }
+
+        .headerListEpisode {
+            height: 100%;
+            border-bottom: 1px solid var(--primary);
+        }
+    }
+
+    .subHeaderEpisode {
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--textColor);
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .listEpisode {
+        width: 100%;
+        min-height: 520px;
+        height: 520px;
+        margin-top: 5px;
+        overflow-y: scroll;
+        // background-color: red;
+
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        &::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 1px grey;
+            border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 10px;
+            transition: all linear 0.2s;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    }
+}

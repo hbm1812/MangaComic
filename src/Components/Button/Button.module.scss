@@ -1,0 +1,145 @@
+.wrapper {
+    font-size: 14px;
+    font-weight: 400;
+    min-width: 100px;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    margin: 5px 10px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    line-height: 100%;
+    transition: all linear 0.25s;
+}
+
+// button type
+.primary {
+    background-color: var(--primaryLight);
+    transition: all linear 0.25s;
+
+    .title, .icon {
+        color: var(--white);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        background-color: var(--primary);
+    }
+}
+
+.outline {
+    border-color: var(--primary);
+    transition: all linear 0.25s;
+
+    .title, .icon {
+        color: var(--primary);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        background-color: var(--primary);
+
+        .title, .icon {
+            color: var(--white);
+        }
+    }
+}
+
+.transparent {
+    background: none;
+    color: var(--white);
+    border: 1px solid var(--white);
+    
+    .title, .icon {
+        color: var(--white);
+        transition: all linear 0.25s;
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    // &:hover {
+    //     .title, .icon {
+    //         color: #657ef8;
+    //     }
+    // }
+}
+
+.primary.active {
+    background-color: var(--primary);
+}
+
+.outline.active {
+    background-color: var(--primary);
+
+    .title {
+        color: var(--white);
+    }
+
+    .icon {
+        color: var(--white);
+    }
+}
+
+// button size 
+.small {
+    padding: 2.5px 7.5px;
+    min-width: 80px;
+
+    .title {
+        font-size: 12px;
+    }
+
+    .icon {
+        font-size: 12px;
+    }
+}
+
+.medium {
+    padding: 5px 15px;
+    min-width: 115px;
+    height: 40px;
+    line-height: 30px;
+
+    .title {
+        font-size: 14px;
+    }
+
+    .icon {
+        font-size: 14px;
+    }
+}
+
+.large {
+    padding: 15px 35px;
+    min-width: 350px;
+
+    .title {
+        font-size: 20px;
+    }
+
+    .icon {
+        font-size: 20px;
+    }
+}
+
+// animation
+.wrapper.scale {
+    &:hover {
+        transform: scale(1.2);
+    }
+}
+
+.wrapper.rotate {
+    &:hover {
+        transform: rotate(180deg);
+    }
+}

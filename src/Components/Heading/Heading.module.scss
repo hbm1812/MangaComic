@@ -1,0 +1,64 @@
+.wrapper {
+    text-transform: uppercase;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--textColor);
+    margin: 10px 0 5px;
+    user-select: none;
+    display: inline-block;
+    cursor: pointer;
+    // transition: all linear 0.25s;
+
+    .title, .icon {
+        color: var(--textColor);  
+        transition: all linear 0.2s;
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        .title {
+            color: var(--primary);
+        }
+
+        .icon {
+            color: var(--primary);
+        }
+    }
+}
+
+.wrapper.active {    
+    .title {
+        color: var(--textColor);
+    }
+
+    .icon {
+        color: var(--textColor);
+    }
+}
+
+// .primary {
+//     pointer-events: none;   
+// }
+
+.origin {
+    pointer-events: none;   
+}
+
+// size heading
+.smallSize {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.normalSize {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.largeSize {
+    font-size: 28px;
+    font-weight: 600;
+}

@@ -1,0 +1,82 @@
+// library
+@import "normalize.css";
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Lobster&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,200&family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700&display=swap');
+
+// reset css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+// chứa các biến
+:root {
+    // mode light
+    --white: #fff;
+    --black: #000;
+    --textColor: #ddd;
+    --primary: #d80f16;
+    --primaryOpacity: rgba(216,15,22,.6);
+    --primaryLight: #f43f5e;
+    --blackOpacity: rgba(0,0,0,.6);
+    --whiteOpacity: rgba(255,255,255,.6);
+    
+    // background
+    --bgTransparent: rgba(17,17,17,0.15);
+    --bgTransparent-1: rgba(17,17,17,0.25);
+    --bgTransparent-2: rgba(17,17,17,0.5);
+    --bgTransparent-3: rgba(17,17,17,0.75);
+    --bgTransparent-4: rgba(17,17,17,0.9);
+    --bgLinear-gradient-blackColumn: linear-gradient(0deg,#202125,rgba(32,33,37,0) 50%,#202125);
+    --bgLinear-gradient-blackRow: linear-gradient(90deg,#202125,rgba(32,33,37,.6) 40%,rgba(32,33,37,0) 60%,rgba(32,33,37,0) 80%,#202125);
+
+    --bgHoverGray: hsla(0, 0%, 100%, .2);
+    
+    // border 
+    --borderPrimary: 3px solid rgba(255, 255, 255, 0.1);
+    --borderPrimaryHover: 3px solid #fff;
+
+    // box shadow
+    --boxShadowThin: 0 3px 7px 0 rgb(0 0 0 / 35%);
+    --boxShadowNormal: 0 3px 7px 0 rgb(0 0 0 / 50%);
+    --boxShadowThick: 0 3px 7px 0 rgb(0 0 0 / 75%);
+
+    // text shadow: 
+    --textGlowPrimary: 0 0 10px #69e0ff, 0 0 20px #69e0ff, 0 0 40px #69e0ff;
+
+    // transition 
+    --transitionPrimary: all linear 0.25s;
+    --transitionFast: all linear 0.1s;
+    --transitionSlow: all linear 0.5s;
+
+    // mode dark
+    --bgDarkMode: #333;
+    --primaryDarkMode: #1ab394;
+    --primaryOpacityDarkMode: rgba(5,95,60,.6);
+
+}
+
+
+body {
+    font-family: 'Didact Gothic', sans-serif;
+    font-family: 'Lobster', cursive;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    text-rendering: optimizeSpeed;
+}
+
+button, input, [tabindex] {
+    outline: none;
+    border: none;
+}
+
+a[href] {
+    color: var(--textColor);
+    text-decoration: none;
+}
+
+// fix lib :V
+.react-slideshow-container .default-nav {
+    margin: 25px;
+}

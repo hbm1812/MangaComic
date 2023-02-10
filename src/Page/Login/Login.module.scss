@@ -1,0 +1,35 @@
+.container {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+
+    .wrapper {
+        background-color: aqua;
+        border-radius: 15px;
+        width: 450px;
+        height: auto;
+        margin: 120px auto;
+
+        .header {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 10px;
+
+            label {
+                display: block;
+            }
+
+            input {
+                padding: 5px 10px;
+                width: 100%;
+            }
+
+            p {
+                color: red;
+            }
+        }
+    }
+}

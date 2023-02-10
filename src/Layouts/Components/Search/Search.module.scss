@@ -1,0 +1,131 @@
+.navbarSearchBox {
+    position: relative;
+
+    .navbarSearch {
+        width: 100%;
+        padding: 8px 20px;
+        padding-right: 23.5%;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        outline: none;
+        transition: 0.25s ease;
+        min-width: 350px;
+
+        &:focus {
+            border-color: var(--primary);
+        }
+    }
+
+    .navbarSearchLabel {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #ccc;
+        pointer-events: none;
+        -webkit-user-select: none;
+        user-select: none;
+        transition: 0.25s ease;
+        opacity: 0;
+    }
+
+    // ic clear
+    .navbarClearIcon {
+        position: absolute;
+        top: 50%;
+        right: 50px;
+        transform: translateY(-50%);
+        color: #bbb;
+        transition: var(--transitionFast);
+        padding: 5px;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--black);
+        }
+    }
+
+    .navbarSearch:focus+.navbarSearchLabel {
+        color: var(--primary);
+        top: 0;
+        left: 10px;
+        padding: 0 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        background-color: var(--white);
+        opacity: 1;
+    }
+
+    .navbarSearchIcon {
+        position: absolute;
+        top: 50%;
+        right: 5px;
+        transform: translateY(-50%);
+        padding: 5px 10px;
+        cursor: pointer;
+        color: #bbb;
+        outline: none;
+        font-size: 18px;
+        border-left: 1.5px solid #bbb;
+        transition: var(--transitionPrimary);
+
+        &:hover {
+            color: var(--black);
+        }
+    }
+}
+
+// subMenu
+
+.searchResultWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 350px;
+    height: auto;
+    padding: 5px 10px;
+    background-color: var(--white);
+    z-index: 10;
+    box-shadow: 0 0 5px #333;
+    transform: translateX(-50%);
+
+    .searchResultTitle {
+        font-weight: normal;
+        margin-bottom: 5px;
+    }
+
+    .seachResultList {
+        list-style-type: none;
+        width: 100%;
+        max-height: 365px;
+        padding: 5px 0;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background-color: #262626;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #71717a;
+            border-radius: 15px;
+            transition: var(--transitionFast);
+        
+            &:hover {
+                background: #b0b0b8;
+        
+            }
+        }
+    }
+
+    
+}
+
+.navbarSearchIcon.iconGlow {
+    color: var(--black);
+}

@@ -1,0 +1,68 @@
+.yourComment {
+    .listAction {
+        margin: 15px 0;
+    }
+
+    .tabList {
+        .commentMode {
+            user-select: none;
+            position: relative;
+
+            .commentModeName {
+                color: var(--white);
+                font-size: 16px;
+                font-weight: 500;
+                display: inline-block;
+                padding: 5px 10px 5px 0;
+                cursor: pointer;
+
+                .commentModeIcon {
+                    margin-left: 10px;
+                    font-size: 18px;
+                }
+            }
+
+            .listCommentMode {
+                list-style-type: none;
+                background-color: var(--white);
+                width: 200px;
+                // border-radius: 8px;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+                padding: 5px 10px;
+                box-shadow: 2px 4px 5px #ccc;
+                position: absolute;                
+
+                .commentModeItem {
+                    width: 100%;
+                    // background-color: purple;
+                    padding: 5px 10px;
+                    color: rgba(0, 0, 0, 0.45);
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    // transition: all linear 0.25s;
+
+                    &:hover {
+                        color: #657ef8;
+                    }
+                }
+
+                .commentModeItem.active {
+                    color: #657ef8;
+                }
+
+
+            }
+        }
+
+
+        .listComment {
+            width: 100%;
+            min-height: 85px;
+            margin: 10px 0;
+            // background-color: red;
+                        
+        }
+    }
+}

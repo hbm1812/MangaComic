@@ -1,0 +1,339 @@
+.wrapperPrimary {
+    width: 25%;
+
+    .itemPrimary {
+        // width: calc(100% - 10px);
+        margin: 10px 5px;
+        height: 300px;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            transition: all linear 0.25s;
+        }
+
+        .info {
+            position: absolute;
+            bottom: 0;
+            // height: 80px;
+            width: 100%;
+            padding: 30px 15px 10px;
+            background-image: linear-gradient(transparent, rgba(0, 0, 0, .1), rgba(0, 0, 0, .3), rgba(0, 0, 0, .5), rgba(0, 0, 0, .7), rgba(0, 0, 0, .9));
+
+            .infoName {
+                color: var(--white);
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                font-size: 16px;
+                font-weight: 400;
+                padding: 5px 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: normal;
+            }
+
+            .infoBottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .infoEpisodeName {
+                    color: var(--white);
+                    font-size: 12px;
+                    font-weight: 400;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    max-width: 100px;
+                }
+
+                .infoEpisodeView {
+                    color: var(--white);
+                    font-size: 12px;
+                    font-weight: 400;
+                    display: flex;
+                    white-space: nowrap;
+
+                    span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        max-width: 130px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+
+        .itemProgress {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            text-align: center;
+            opacity: 1;
+            transition: all linear 0.25s;
+        }
+
+        .itemPlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--white);
+            background-color: rgba(0, 0, 0, .6);
+            box-shadow: 0 0 10px #fff;
+            opacity: 0;
+            transition: all linear 0.25s;
+
+            .itemPlayIcon {
+                width: 50%;
+                height: 50%;
+                transform: translate(50%, 50%);
+                font-size: 16px;
+                color: var(--white);
+            }
+        }
+
+        &:hover {
+            img {
+                transform: scale(1.2);
+            }
+
+            .itemPlay {
+                opacity: 1;
+            }
+
+            .itemProgress {
+                opacity: 0;
+            }
+
+            .episodeNameChangePos {
+                opacity: 1;
+            }
+        }
+    }
+
+    .itemMangaRow {
+        width: calc(100% - 10px);
+        margin: 10px 5px;
+        height: 230px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+
+        .itemMangaRowImgWrap {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 180px;
+                transition: all linear 0.25s;
+                position: relative;
+            }
+        }
+
+        .infoName {
+            color: var(--textColor);
+            font-size: 16px;
+            font-weight: 400;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .infoEpisodeName {
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 400;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100px;
+        }
+
+        .itemProgress {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            text-align: center;
+            opacity: 1;
+            transition: all linear 0.25s;
+        }
+
+        .itemPlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--white);
+            background-color: rgba(0, 0, 0, .6);
+            box-shadow: 0 0 10px #fff;
+            opacity: 0;
+            transition: all linear 0.25s;
+
+            .itemPlayIcon {
+                width: 50%;
+                height: 50%;
+                transform: translate(50%, 50%);
+                font-size: 16px;
+                color: var(--white);
+            }
+        }
+
+        .episodeNameChangePos {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 60%;
+            min-width: 100px;
+            max-width: 170px;
+            color: var(--white);
+            background: rgba(0, 0, 0, .4);
+            padding: 2.5px 10px;
+            transform: translateY(25%);
+            opacity: 0;
+            transition: all linear 0.25s;
+        }
+
+        &:hover {
+
+            .itemMangaRowImgWrap {
+                img {
+                    transform: scale(1.2);
+                }
+            }
+
+            .itemPlay {
+                opacity: 1;
+            }
+
+            .itemProgress {
+                opacity: 0;
+            }
+
+            .episodeNameChangePos {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// item type
+
+// set column
+.oneColumn {
+    width: 100%;
+    min-width: 300px;
+
+    .itemPrimary {
+        height: 400px;
+    }
+}
+
+.twoColumn {
+    width: 50%;
+    min-width: 210px;
+
+    .itemPrimary {
+        height: 250px;
+    }
+
+}
+
+.threeColumn {
+    width: 33.33%;
+    min-width: 210px;
+
+    .itemPrimary {
+        height: 200px;
+    }
+}
+
+.fourColumn {
+    width: 25%;
+    min-width: 210px;
+    
+    .itemPrimary {
+        height: 200px;
+        border-top-left-radius: 35px;
+        border-top-right-radius: 35px;
+
+        .info {
+            .infoName {
+                // --webkit-line-clamp: 1 !important;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+        
+    }
+}
+
+.fiveColumn {
+    width: 20%;
+    min-width: 210px;
+
+    .itemPrimary {
+        height: 270px;
+    }
+
+}
+
+.sixColumn {
+    width: 16.66%;
+    // min-width: 210px;
+
+    .itemPrimary {
+        height: 300px;
+    }
+
+}
+
+// set mode
+.comingSoon {
+    background-color: rgba(216, 15, 22, .6);
+}
+
+.complete {
+    background-color: rgba(5, 95, 60, .6);
+}
+
+.hidden {
+    display: none;
+}

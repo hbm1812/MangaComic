@@ -1,0 +1,125 @@
+.item {
+    width: 100%;
+    padding: 10px 15px;
+    user-select: none;
+    // background-color: aqua;
+
+    .itemHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .itemInfoUser {
+            display: flex;
+            align-items: center;
+
+            .itemAvatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                overflow: hidden;
+                margin-right: 15px;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .itemInfo {
+                .itemUsername {
+                    color: var(--white);
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+
+                .itemTimeUpdate {
+                    color: var(--textColor);
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+            }
+        }
+
+        .itemActionUser {
+            width: 25px;
+            height: 25px;
+            position: relative;
+
+            .itemIconMore {
+                font-size: 18px;
+                width: 100%;
+                height: 100%;
+                color: var(--textColor);
+                transition: all linear 0.15s;
+            }
+
+            &:hover {
+                .itemIconMore {
+                    color: #657ef8;
+
+                }
+            }
+
+            .listActiveUser {
+                position: absolute;
+                right: 0;
+                top: 30px;
+                width: 200px;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+                padding: 5px 10px;
+                box-shadow: 2px 4px 5px #ccc;
+                list-style-type: none;
+                background-color: var(--white);
+                // display: none;
+
+                .itemActiveUser {
+                    width: 100%;
+                    padding: 5px 10px;
+                    color: rgba(0, 0, 0, 0.45);
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all linear 0.25s;
+
+                    &:hover {
+                        color: #657ef8;
+                    }
+                }              
+            }
+        }
+    }
+
+    .itemBody {
+        margin-top: 10px;
+        margin-left: 65px;
+
+        .itemContent {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+
+        .itemImgUpload {
+            width: auto;
+            max-width: 100%;
+        }
+    }
+
+    .itemFooter {
+        // 10 từ button :v
+        margin-left: calc(65px - 10px);
+    }
+
+    .inpComment {
+        margin-left: 65px;
+    }
+
+    .subItem {
+        width: calc(100% - 65px);
+        margin-left: 65px;
+    }
+}

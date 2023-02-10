@@ -1,0 +1,82 @@
+.navbarMenu {
+    list-style-type: none;
+    display: flex;
+    // align-items: center;
+    line-height: 60px;
+
+    .navbarMenuItem {
+        margin: 0 5px;
+        position: relative;
+        transition: var(--transitionPrimary);
+
+        color: var(--textColor);
+        text-shadow: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        padding: 0 15px;
+        display: flex;
+        align-items: center;
+        transition: 0.3s linear;
+        cursor: pointer;
+
+        .icon {
+            color: var(--textColor);
+            margin-left: 5px;
+            font-size: 16px;
+
+            &:hover {
+                color: var(--white);
+            }
+        }
+
+        // submenu
+        .navbarSubMenu {
+            background-color: var(--bgTransparent-4);
+            position: absolute;
+            list-style-type: none;
+            width: 220px;
+            left: 0;
+            top: 60px;
+            display: flex;
+            flex-direction: column;
+            // pointer-events: none;
+            display: none;
+            animation: subNavShow linear 0.3s;
+
+            .navbarSubMenuItem {
+                width: 100%;
+                font-size: 14px;
+                padding: 0 15px;
+                overflow: hidden;
+                transition: var(--transitionFast);
+
+                a {
+                    text-decoration: none;
+                    width: 100%;
+                    color: var(--white);
+                    display: block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    text-shadow: none;
+                }
+
+                &:hover {
+                    background-color: #3b3a3a;
+                }
+            }
+        }
+
+        &:hover {
+            color: var(--white);
+            text-shadow: var(--textGlowPrimary);
+
+            .navbarSubMenu {
+                display: flex;
+            }
+        }
+
+
+    }
+}

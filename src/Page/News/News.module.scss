@@ -1,0 +1,39 @@
+.wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    .sidebarWrap {
+        width: 25%;
+        padding: 0 5px;
+        position: relative;
+    }    
+
+    .contentWrap {
+        width: 75%;
+
+        .headerContent {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            // width: 100%;        
+        }
+
+        .viewMore {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0 40px;
+        }
+    }
+
+    
+}

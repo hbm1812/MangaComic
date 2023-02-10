@@ -1,0 +1,234 @@
+.wrapper {
+    width: calc(12.5% - 15px);
+    height: 200px;
+    border: 1px solid var(--bgHoverGray);
+    overflow: hidden;
+    border-radius: 12px;
+    margin: 10px 7.5px;
+    background: linear-gradient(to bottom right, var(--black), var(--bgHoverGray));
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition: var(--transitionFast);
+
+    .avatar {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+            text-transform: capitalize;
+            background-color: var(--black);
+            color: var(--white);
+        }
+    }
+
+    .overlay {
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        background-color: var(--bgTransparent-3);
+        cursor: auto;
+        display: none;
+        transform: translateX(-100%);
+        // animation: showDetailChar linear 0.75s;
+
+        .userActive {
+            width: 100%;
+            padding: 40px 80px;
+            text-align: right;
+
+            .icon {
+                font-size: 32px;
+                font-weight: 200;
+                padding: 5px 15px;
+                cursor: pointer;
+                color: var(--white);
+                transition: var(--transitionFast);
+
+                &:nth-child(1) {
+                    transition: var(--transitionPrimary);
+
+                    &:hover {
+                        transform: translateX(-15px);
+                    }
+                }
+
+                &:nth-child(2) {
+                    transition: var(--transitionPrimary);
+
+                    &:hover {
+                        transform: rotate(180deg);
+                    }
+                }
+
+                &:nth-child(3) {
+                    transition: var(--transitionPrimary);
+
+                    &:hover {
+                        transform: translateX(15px);
+                    }
+                }
+
+                &:hover {
+                    color: var(--primaryLight);
+                }
+            }
+        }
+
+        .info {
+            display: flex;
+            width: 100%;
+
+            .detail {
+                width: 40%;
+                margin-right: 5%;
+                animation: showDetailChar linear 0.75s;
+
+                .nameWrap {
+                    position: relative;
+                    display: inline-block;
+                    padding-left: 20%;
+                    max-width: 100%;
+
+                    .name {
+                        font-size: 36px;
+                        font-weight: 400;
+                        text-transform: capitalize;
+                        min-height: 54px;
+                        color: var(--white);
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: calc(100% + 10px);
+                        height: 1px;
+                        background: var(--white);
+                    }
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        right: -10px;
+                        bottom: 0;
+                        width: 1px;
+                        height: 100%;
+                        background-color: var(--white);
+                        transform: skewX(-45deg) translateX(calc(54px / 2));
+                    }
+                }
+
+                .role {
+                    color: var(--white);
+                    font-size: 22px;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                    padding-left: 20%;
+                    margin: 20px 0;
+                }
+
+
+                .desc {
+                    color: var(--white);
+                    font-size: 18px;
+                    font-weight: 200;
+                    margin-left: 20%;
+                    letter-spacing: 0.8px;
+                    border: 1px solid transparent;
+                    padding: 5px 8px;
+                    border-radius: 12px;
+                    max-height: 450px;
+                    overflow-y: scroll;
+                    border: none;
+
+                    &::-webkit-scrollbar {
+                        width: 5px;
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        background: #555;
+                        border-radius: 12px;
+                    }
+
+                    &::-webkit-scrollbar-thumb:hover {
+                        background: #888;
+                    }
+                }
+            }
+
+            img {
+                // min-width: 30%;
+                max-width: 55%;
+                height: auto;
+                max-height: -webkit-fill-available;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                margin-top: 15vh;
+                animation: charPersonShow linear 0.75s;
+                object-fit: contain;
+            }
+        }
+
+
+
+    }
+
+    .overlay.show {
+        display: block;
+        transform: translateX(0);
+    }
+
+    &:hover {
+        border-color: var(--white);
+    }
+
+}
+
+@keyframes showDetailChar {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes charPersonShow {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,181 @@
+.wrapper {
+    width: 100%;
+
+    .item {
+        width: 100%;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border: 3px solid rgba(0,0,0,0);
+        border-radius: 4px;
+        transition: all linear 0.2s;
+        cursor: pointer;
+
+        .link {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+
+            img {
+                width: 265px;
+                min-height: 140px;
+                height: auto;
+                margin-right: 20px;
+            }
+
+            .info {
+                width: 100%;
+                height: 140px;
+                // display: flex;
+                // flex-direction: column;
+                // justify-content: space-between;
+                padding-bottom: 25px;
+                position: relative;
+                overflow: hidden;
+
+                .title {
+                    font-size: 18px;
+                    font-weight: 600;
+                    max-height: 82px;
+                    overflow: hidden;
+                    color: var(--white);
+                    // color: #8c8c8c;
+                }
+
+                .desc {
+                    font-size: 14px;
+                    color: var(--textColor);
+                    margin: 5px 0 10px;
+                    width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                .itemBottom {
+                    display: flex;
+                    justify-content: flex-end;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+
+                    .date {
+                        color: #999;
+                        font-size: 14px;
+                    }
+
+                    .category {
+                        font-size: 14px;
+                        margin-left: 15px;
+                    }
+                    
+                    .category.animeCate {
+                        // color: #1cb0f6;
+                        color: var(--primary);
+                    }
+
+                    .category.mangaCate {
+                        color: #99cc33;
+                    }
+
+                    .category.infoCate {
+                        color: #ffc000;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            // border-color: rgba(15, 15, 15, 0.15);
+            border-color: var(--primaryOpacity);
+
+        }
+    }
+}
+
+.wrapper.watched {
+    
+    .item {
+        border: none;
+    }
+
+    .link {
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+
+        img {
+            width: 100%;
+        }
+
+        .info {
+            height: auto;
+            max-height: 65px;
+
+            .title {
+                font-size: 14px;
+            }
+        }        
+    }
+}
+
+.wrapper.columnOne {
+    width: 100%;
+}
+
+.wrapper.columnTwo {
+    width: 50%;
+}
+
+.wrapper.columnFour {
+    width: 25%;
+}
+
+.wrapper.recommend {
+    
+    .item {
+        height: 100%;
+        border: none;
+    }
+
+    .link {
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+
+        .imgWrap {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                transition: all linear 0.25s;
+            }
+        }
+
+        .info {
+            height: auto;
+            padding-bottom: 0;
+            position: unset;
+
+            .title {
+                font-size: 14px;
+                margin: 5px 0;
+            }   
+            
+            .itemBottom {
+                position: relative;
+            }
+        }        
+    }
+
+    &:hover {
+        .imgWrap {
+
+            img {
+                transform: scale(1.2);
+            }
+        }
+    }
+}
