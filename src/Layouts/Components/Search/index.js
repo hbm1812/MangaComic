@@ -1,16 +1,18 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HeadlessTippy from '@tippyjs/react/headless';
 import clsx from 'clsx';
 import styles from "./Search.module.scss";
 import { useEffect, useState, useRef } from 'react';
-import { SearchIcon, CircleXmarkIcon } from '../../../Components/Icon';
+import { SearchIcon, CircleXmarkIcon, SpinnerIcon } from '../../../Components/Icon';
+
+import useDebounce from "../../../Hooks/useDebounce";
 import ItemMangaSearch from "../../../Components/ItemMangaSearch";
+import * as services from "../../../services/searchServices";
 
 function Search() {
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(true);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const inputRef = useRef();
 
@@ -24,37 +26,70 @@ function Search() {
         setShowResult(false);
     }
 
+    const handleClickItem = () => {
+        setSearchResult([]);
+        setSearchValue("");
+    }
+
+    const handleChange = (e) => {
+        const searchValue = e.target.value;
+        if(searchValue.startsWith(" ")) {
+            return;
+        }
+        setSearchValue(e.target.value);
+    }
+
+    const debounced = useDebounce(searchValue, 500);
+
     useEffect(() => {
-        if(!searchValue.trim()) {
+        if (!debounced.trim()) {
+            setSearchResult([]);
             return;
         }
 
-        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${searchValue}&type=less`)
-            .then(res => res.json())
-            .then(res => {
-                setSearchResult(res.data)
-            })
+        const fetchApi = async () => {
+            setLoading(true);
+
+            const result = await services.search(debounced);
+            setSearchResult(result);
+
+            setLoading(false);
+        }
         
-    }, [searchValue])
+        fetchApi();
+        // using axios
+        // const fetchApi = async () => {
+        //     try {
+        //         const res = await request.get(`users/search`, {
+        //             params: {
+        //                 q: debounced,
+        //                 type: "less"
+        //             }
+        //         })
+        //         setSearchResult(res.data)
+        //         setLoading(false);
+        //     } catch (error) {
+        //         setLoading(false);
+        //     }
+        // }
+        // fetchApi();
 
 
-    // useEffect(() => {
-    //     if (!debouncedValue.trim()) {
-    //         setSearchResult([]);
-    //         return;
-    //     }
 
-    //     const fetchApi = async () => {
-    //         setLoading(true);
+        // fetch api
+        // fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
+        //     .then(res => res.json())
+        //     .then(res => {
+        //         setSearchResult(res.data)
+        //         setLoading(false);
+        //     })
 
-    //         const result = await searchServices.search(debouncedValue);
+        //     .catch(() => {
+        //         setLoading(false);  
+        //     })
 
-    //         setSearchResult(result);
-    //         setLoading(false);
-    //     };
+    }, [debounced])
 
-    //     fetchApi();
-    // }, [debouncedValue]);
     return (
         <HeadlessTippy
             interactive
@@ -67,9 +102,9 @@ function Search() {
                     <ul className={clsx(styles.seachResultList)}>
                         {searchResult.map((result, index) => {
                             return (
-                                <ItemMangaSearch key={index} data={result} />
+                                <ItemMangaSearch key={index} data={result} onClick={handleClickItem} />
                             )
-                            
+
                         })}
                     </ul>
                 </div>
@@ -83,13 +118,12 @@ function Search() {
                     value={searchValue}
                     ref={inputRef}
                     placeholder="Tìm kiếm manga"
-                    onChange={((e) => {
-                        setSearchValue(e.target.value);
-                    })}
+                    onChange={handleChange}
                     onFocus={() => setShowResult(true)}
                 />
                 <label htmlFor="" className={clsx(styles.navbarSearchLabel)}>Tìm kiếm manga</label>
-                {searchValue && <CircleXmarkIcon className={clsx(styles.navbarClearIcon)} onClick={handleClear} />}
+                {searchValue && !loading && <CircleXmarkIcon className={clsx(styles.navbarClearIcon)} onClick={handleClear} />}
+                {loading && <SpinnerIcon className={clsx(styles.navbarSpinnerIcon)} />}
 
                 <SearchIcon className={clsx(styles.navbarSearchIcon, {
                     [styles.iconGlow]: searchValue.length > 0,

@@ -10,6 +10,7 @@ import MangaDetail from "../Page/MangaDetail";
 import Login from "../Page/Login";
 import ReadManga from "../Page/ReadManga";
 import Error404 from "../Page/Error404";
+import Test from "../Page/Test";
 
 
 // layout
@@ -29,6 +30,9 @@ const publicRoutes = [
     { path: "/tin-tuc-ct", component: NewsDetail},
     { path: "/dang-nhap", component: Login, layout: null},
     { path: "/doc-truyen", component: ReadManga, layout: OnlyBackground},
+
+    { path: "/test", component: Test, layout: null},
+
 
     // not other routes match
     { path: "*", component: Error404, layout: null},

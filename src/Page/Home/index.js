@@ -140,7 +140,7 @@ const dataRecommend = [
         chapter: 100,
         name: "Spy X Family",
         desc: `Câu chuyện kể về một điệp viên của "Tây Quốc" Westalis (西国ウェスタリス Wesutarisu?) có mật danh là "Hoàng hôn", cố gắng xây dựng một "gia đình kiểu mẫu" nhằm thu thập thông tin tình báo tại nước đối địch, "Đông Quốc" Ostania (東国オスタニア Osutania?)`,
-        src: "https://kaguya.live/_next/image?url=https%3A%2F%2Fs4.anilist.co%2Ffile%2Fanilistcdn%2Fmedia%2Fmanga%2Fbanner%2F108556-iCiPfU0GU4OM.jpg&w=1920&q=75",
+        src: "https://muagitot.com/images/news/2022/07/07/large/wp7868567_1657152589.jpg",
         satisfied: 58,
         favorite: 11102,
         listCategory: [

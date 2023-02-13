@@ -14,6 +14,7 @@ import { faAngleRight, faAngleLeft, faThumbsUp, faCommentDots, faShareNodes, faF
     faXmark,
     faHouse,
     faCircleXmark,
+    faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -256,6 +257,15 @@ function CircleXmarkIcon({className, onClick}) {
     );
 }
 
+function SpinnerIcon({className, onClick}) {
+    const props = {
+        onClick,
+    };
+    return (  
+        <FontAwesomeIcon icon = {faSpinner} className={className} {...props}/>
+    );
+}
+
 
 export { 
     HeadingLeftIcon, 
@@ -284,4 +294,5 @@ export {
     XmarkIcon,
     HouseIcon,
     CircleXmarkIcon,
+    SpinnerIcon,
 };

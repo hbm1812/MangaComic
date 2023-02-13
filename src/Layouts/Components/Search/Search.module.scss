@@ -13,6 +13,10 @@
 
         &:focus {
             border-color: var(--primary);
+
+            &::placeholder {
+                color: transparent;
+            }
         }
     }
 
@@ -40,6 +44,23 @@
         transition: var(--transitionFast);
         padding: 5px;
         cursor: pointer;
+
+        &:hover {
+            color: var(--black);
+        }
+    }
+
+    // loading 
+    .navbarSpinnerIcon {
+        position: absolute;
+        top: 50%;
+        right: 50px;
+        transform: translateY(-50%);
+        color: #bbb;
+        transition: var(--transitionFast);
+        padding: 5px;
+        cursor: pointer;
+        animation: Spinner 1s linear infinite;
 
         &:hover {
             color: var(--black);
@@ -128,4 +149,14 @@
 
 .navbarSearchIcon.iconGlow {
     color: var(--black);
+}
+
+@keyframes Spinner {
+    from {
+        transform: translateY(-50%) rotate(0deg);
+    }
+
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
 }
