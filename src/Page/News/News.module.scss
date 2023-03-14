@@ -4,11 +4,12 @@
     flex-wrap: wrap;
     flex-direction: row;
     padding: 0 60px;
+    padding-top: 15px;
 
     .sidebarWrap {
         width: 25%;
         padding: 0 5px;
-        position: relative;
+        position: relative;        
     }    
 
     .contentWrap {
@@ -35,6 +36,4 @@
             margin: 25px 0 40px;
         }
     }
-
-    
 }

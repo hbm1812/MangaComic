@@ -6,7 +6,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Heading from "../../Components/Heading";
 import Character from "../../Components/Character";
-import Comment from "../Components/Comment";
 
 // test img
 import Lena86 from "../../assets/images/characters/lena86.png";
@@ -16,6 +15,7 @@ import ItemManga from "../../Components/ItemManga";
 
 // data
 import { dataManga } from "../../data/manga";
+import Comments from "../../Components/Comments";
 
 
 const SOURCES = [
@@ -515,7 +515,7 @@ function MangaDetail() {
 
                 <div className={clsx(styles.comment)}>
                     <Heading primary>Bình luận</Heading>
-                    <Comment />
+                    <Comments />
                 </div>
             </div>
 

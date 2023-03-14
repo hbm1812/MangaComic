@@ -1,0 +1,13 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 15px 0;
+
+    .item {
+        width: calc(100% / 7);
+        min-height: 150px;
+        border: 1px solid grey;
+        text-align: center;
+    }
+}

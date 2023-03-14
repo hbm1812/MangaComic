@@ -4,90 +4,108 @@ import Button from "../../Components/Button";
 import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
 import users from "../../data/user";
+import request, { post } from "../../util/request";
 
 // validate 
 // npm install validator
 import isEmpty from "validator/lib/isEmpty";
 import Image from "../../Components/Image";
+import FormInput from "../../Components/FormInput";
+import { UploadIcon } from "../../Components/Icon";
 
 
 function Login() {
     // router dom
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [validationMsg, setValidationMsg] = useState({});
-    const [accountList, setAccountList] = useState(users);
-    
-    const onChangeEmail = (e) => {
-        const value = e.target.value;
-        setEmail(value);
+    const [values, setValues] = useState({
+        username: "",
+        password: "",
+    });
+
+    const inputs = [
+        {
+            id: 1,
+            name: "username",
+            type: "text",
+            placeholder: "Username",
+            label: "Username",
+            errorMessage: "Vui lòng nhập tên đăng nhập 3-16 ký tự",
+            pattern: "[A-Za-z0-9_]{3,15}",
+            required: true
+        },
+        {
+            id: 2,
+            name: "password",
+            type: "password",
+            placeholder: "Password",
+            label: "Password",
+            errorMessage: "Vui lòng nhập mật khẩu 3-16 ký tự",
+            pattern: "[A-Za-z0-9_]{3,15}",
+            required: true
+        },
+    ];
+
+    const onHandleSubmit = async (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        console.log(data);
+        console.log(Object.fromEntries(data.entries()))
+
+        // try {
+        //     const res = await request.post({
+        //         method: "post",
+        //         url: "localhost",
+        //         data: data,
+        //         config: {
+        //             header: {
+        //                 'Content-Type': 'multipart/form-data'
+        //             }
+        //         }
+        //     });
+        //     console.log(res);
+        // } catch (error) {
+        //     console.log(error)
+
+        // }
+
 
     }
 
-    const onChangePassword = (e) => {
-        const value = e.target.value;
-        setPassword(value);
-    }
-
-    const validateAll = (e) => {
-        const msg = {};
-        if (isEmpty(email)) {
-            msg.email = "Vui lòng nhập email của bạn";
-        }
-
-        if (isEmpty(password)) {
-            msg.password = "vui lòng nhập password";
-        }
-
-        setValidationMsg(msg);
-        if (Object.keys(msg).length > 0) return false;
-        return true;
-    }
-    
-
-    const onSubmitLogin = () => {
-        const isValid = validateAll();
-        if (!isValid) {
-            return;
-        }
-        navigate("/");                
-                
+    const onChangeInput = (e) => {
+        // e.target.name lấy key trong obj
+        // e.target.value lấy giá trị trong obj
+        setValues({ ...values, [e.target.name]: e.target.value })
     }
 
     return (
         <div className={clsx(styles.container)}>
-            <div className={clsx(styles.wrapper)}>
+            <form className={clsx(styles.wrapper)}
+                onSubmit={onHandleSubmit}
+            >
                 <div className={clsx(styles.header)}>
-                    Đăng nhập
+                    Login
                 </div>
-                <div className={clsx(styles.content)}>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" name="email" value={email} id="email"
-                        placeholder="Email@gmail.com"
-                        onChange={onChangeEmail}
-                    />
-                    <p>{validationMsg.email}</p>
+                {inputs.map((item, index) => {
+                    return (
+                        <FormInput
+                            key={index}
+                            value={values[item.name]}
+                            onChange={onChangeInput}
+                            {...item}
+                        />
 
-                    <label htmlFor="password">Your Password</label>
-                    <input type="password" name="password" value={password} id="password"
-                        placeholder="******"
-                        onChange={onChangePassword}
-                    />
-                    <p>{validationMsg.password}</p>
+                    )
+                })}
+                <Button primary large>Login</Button>
+                {/* <Button iconLeft={<UploadIcon/>} transparent large>Login with Google</Button>                 */}
+                <div className={clsx(styles.register)}>
+                    don't have an account? 
+                    <span
+                        onClick={() => navigate("/register")}
+                    >Register now!</span>
                 </div>
-                <div className={clsx(styles.footer)}>
-                    <Button primary
-                        onClick={onSubmitLogin}
-                    >Login</Button>
-                </div>
-                <Image
-                    src=""
-                    className={clsx(styles.testImg)}
-                    fallback="https://tinhocdaiviet.com/wp-content/uploads/Genshin-Impact-Se-Duoc-Chuyen-The-Thanh-Anime-1.jpg"
-                />
-            </div>
+            </form>
         </div>
     );
 }

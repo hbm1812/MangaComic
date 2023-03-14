@@ -59,8 +59,26 @@
                         // white-space: normal;
                     }
 
-                    .listCategory {
+                    .genres {
+                        list-style-type: disc;
+                        display: flex;
+                        align-items: center;
+                        padding-left: 25px;
+                        width: 100%;
+                        flex-wrap: wrap;
                         margin-bottom: 15px;
+            
+                        li {
+                            font-size: 16px;
+                            font-weight: 300;
+                            margin-right: 25px;
+                            color: var(--textColor);
+                            transition: var(--transitionFast);
+            
+                            &:hover {
+                                color: var(--white);
+                            }
+                        }
                     }
                 }
 

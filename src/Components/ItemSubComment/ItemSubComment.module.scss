@@ -104,7 +104,9 @@
 
         .itemImgUpload {
             width: auto;
-            max-width: 100%;
+            object-fit: cover;
+            height: fit-content;
+            max-width: 50%;
         }
     }
 
@@ -115,5 +117,53 @@
 
     .inpComment {
         margin-left: 65px;
+    }
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // min-height: calc(300px - 20px);
+    min-height: 180px;
+
+    .heading {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--black);
+        text-transform: capitalize;
+
+    }
+
+    .body {
+        user-select: none;
+
+        .delete {
+
+            .title {
+                margin: 15px 0 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            p {
+                margin: 10px 0;
+                font-size: 16px;
+                font-weight: 400;
+                text-transform: capitalize;
+
+                b {
+                    margin-left: 5px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    text-transform: none;
+                }
+            }            
+        }
+    }
+
+    .userActive {
+        display: flex;
+        justify-content: flex-end;
     }
 }

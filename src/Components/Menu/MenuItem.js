@@ -2,6 +2,12 @@ import clsx from "clsx";
 import styles from "./Menu.module.scss";
 import { Link } from "react-router-dom";
 import { CaretDownIcon } from "../Icon";
+import PropTypes from "prop-types";
+
+MenuItem.propTypes = {
+    data: PropTypes.object.isRequired,
+    onClick: PropTypes.func,
+}
 
 function MenuItem({ data, onClick }) {
     let Comp = "div";

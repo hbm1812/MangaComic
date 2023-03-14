@@ -19,7 +19,8 @@ const MENU_ITEM = [
     {
         icon: null,
         title: "Tin tức",
-        to: "/tin-tuc"
+        // to: "/tin-tuc"
+        to: "/news"
     },
     {
         icon: <CaretDownIcon/>,

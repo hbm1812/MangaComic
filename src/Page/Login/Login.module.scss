@@ -1,18 +1,27 @@
 .container {
     width: 100%;
-    height: auto;
     min-height: 100vh;
+    background: url("https://img6.thuthuatphanmem.vn/uploads/2022/02/25/background-nhe-nhang-tuyet-dep_082543688.jpg") center/cover no-repeat;
+    position: relative;    
 
     .wrapper {
-        background-color: aqua;
+        background-color: var(--white);
         border-radius: 15px;
-        width: 450px;
+        width: 350px;
         height: auto;
-        margin: 120px auto;
+        padding: 20px 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: var(--boxShadowNormal);
 
         .header {
             padding: 15px;
             text-align: center;
+            font-size: 32px;
+            font-weight: 600;
+            user-select: none;
         }
 
         .content {
@@ -29,6 +38,23 @@
 
             p {
                 color: red;
+            }
+        }
+
+        .register {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--blackOpacity);
+            margin-top: 15px;
+            user-select: none;
+
+            span {
+                color: var(--black);
+                font-size: 14px;
+                font-weight: 600;
+                margin-left: 5px;
+                cursor: pointer;
             }
         }
     }

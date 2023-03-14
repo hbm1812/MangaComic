@@ -1,91 +1,86 @@
 import styles from "./NewsDetail.module.scss";
 import clsx from "clsx";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 // components
 import Button from "../../Components/Button";
 import Heading from "../../Components/Heading";
-import { CommentLikeIcon, CommentCmtDotsIcon, CommentShareIcon, CommentAddImageIcon, CommentEmojiIcon, CommentArrowDownIcon } from "../../Components/Icon";
-import SidebarPage from "../Components/SidebarPage";
-import ItemNews from "../../Components/ItemNews";
-import Comment from "../Components/Comment";
-export default function NewsDetail() {    
-    let category = "Anime";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import GlobalContext from "../../Contexts/GlobalContext";
+import Comments from "../../Components/Comments";
+import Image from "../../Components/Image";
+
+
+export default function NewsDetail() {
+    const navigate = useNavigate();
+    const params = useParams();
+    // console.log("param", params);
+    const { newsDetail, setNewsDetail } = useContext(GlobalContext);
+    // console.log("newdt", newsDetail)
+    const [category, setCategory] = useState(newsDetail.key_category ?? "");
+
+    const getData = async () => {
+        const respon = await axios.get(`http://localhost/manga-comic-be/api/news/showNewDetail.php?id=${params.newsId}`);
+        // console.log("repson", respon.data)    
+        if (respon.data.length <= 0) {
+            // console.log("not found :v");
+            navigate("/notfound");
+        }
+
+        setNewsDetail(respon.data[0])
+    }
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    // console.log("newdtpg", newsDetail)
+    // console.log("content", newsDetail.content)
+    // xử lý data :v 
+    if (newsDetail) {
+        // xử lý chuỗi
+        const strContent = newsDetail.content || "";
+        var strReplace = strContent.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\t/g, "\u00a0").replace(/\n/g, '<br/>');
+
+        // xử lý time
+        const getStrCreatedAt = newsDetail.created_at || "";
+        let arrDateCreated = getStrCreatedAt.split(" ");
+        var getTime = arrDateCreated[0].split("-").reverse().join("/");
+    }
+
     return (
         <Fragment>
-            <section className={clsx(styles.wrapper)}>                      
-               {/* content */}
-               <div className={clsx(styles.contentWrap)}>
+            <section className={clsx(styles.wrapper)}>
+                {/* content */}
+                <div className={clsx(styles.contentWrap)}>
                     <div className={clsx(styles.article)}>
-                        <Heading primary>Tuyển tập Genshin Impact - Strolling Beneath a Moon Awaiting Spring</Heading>
-                        <p className={clsx(styles.articleDate)}>Thời gian đăng: 27/12/2022</p>
+                        <Heading primary>{newsDetail.title}</Heading>
+                        <p className={clsx(styles.articleDate)}>Thời gian đăng: {getTime}</p>
                         {
-                            category === "Anime" ? 
-                                <p className={clsx(styles.articleCategory, styles.animeCate)}>Thể loại: thông tin</p>
-                            : category === "Info" ?
-                                <p className={clsx(styles.articleCategory, styles.infoCate)}>Thể loại: thông tin</p>
-                            : category === "Manga" ?
-                                <p className={clsx(styles.articleCategory, styles.mangaCate)}>Thể loại: thông tin</p>
-                            : ""
+                            category === "anime" ?
+                                <p className={clsx(styles.articleCategory, styles.animeCate)}>Thể loại: {newsDetail.name_category || ""}</p>
+                                : category === "info" ?
+                                    <p className={clsx(styles.articleCategory, styles.infoCate)}>Thể loại: {newsDetail.name_category || ""}</p>
+                                    : category === "comic" ?
+                                        <p className={clsx(styles.articleCategory, styles.mangaCate)}>Thể loại: {newsDetail.name_category || ""}</p>
+                                        : ""
                         }
-                        
+
                         <div className={clsx(styles.articleImgWrapper)}>
-                            <img className={clsx(styles.articleImg)} src="https://s199.imacdn.com/ta/2022/12/22/4aad4c69a6d9d6a9_ffcd5eaeb7c4801e_5966216717215802769722.jpg" alt="" />                            
+                            <img className={clsx(styles.articleImg)} src={newsDetail.thumbnail || ""} alt="" />
                         </div>
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
+                        <p className={clsx(styles.articleDesc)}
+                            dangerouslySetInnerHTML={{ __html: strReplace }}
+                        ></p>
 
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
+                        <Heading>Bình luận</Heading>
+                        {/* currentUserId sau truyền id ng dùng khi đăng nhập */}
+                        <Comments currentUserId={1} />
 
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
-
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
-
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
-
-                        <p className={clsx(styles.articleDesc)}>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. 
-                        If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-                        making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-                        The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
-                        </p>
-
-                        <Heading primary>Bình luận</Heading>
-                        <Comment/>                                                
-                        
                     </div>
+                </div>
 
-                    <div className={clsx(styles.sidebarWrap)}>
-                        <SidebarPage type="recommend" title="Có thể bạn sẽ thích" />
-                    </div>                      
-               </div>
-               
-                
-                
-            </section>            
+            </section>
         </Fragment>
     )
 }

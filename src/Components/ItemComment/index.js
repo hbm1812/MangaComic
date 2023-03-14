@@ -2,7 +2,7 @@ import clsx from "clsx";
 import styles from "./ItemComment.module.scss";
 import Button from "../Button";
 import { useState } from "react";
-import { CommentLikeIcon, CommentCmtDotsIcon, CommentShareIcon, CommentAddImageIcon, CommentEmojiIcon, CommentArrowDownIcon, EllipsisVerticalIcon } from "../Icon";
+import { LikeIcon, CmtDotsIcon, EllipsisVerticalIcon } from "../Icon";
 import ItemSubComment from "../ItemSubComment";
 import InputComment from "../InputComment";
 
@@ -58,8 +58,8 @@ function ItemComment() {
                 <img className={clsx(styles.itemImgUpload)} src={"https://upload-os-bbs.hoyolab.com/upload/2022/10/28/40172375/e205cd258503b7a1527ab757afc0422c_3093601676826007971.png?x-oss-process=image/resize,s_500/quality,q_80/auto-orient,0/interlace,1/format,png" || ""} alt="" />
             </div>
             <div className={clsx(styles.itemFooter)}>
-                <Button transparent small iconLeft={<CommentLikeIcon />}>525</Button>
-                <Button transparent small iconLeft={<CommentCmtDotsIcon />}
+                <Button transparent small iconLeft={<LikeIcon />}>525</Button>
+                <Button transparent small iconLeft={<CmtDotsIcon />}
                     onClick={() => {
                         setShowInputComment(!showInputComment);
                     }}

@@ -7,14 +7,21 @@
     border: 1px solid transparent;
     margin: 5px 10px;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     line-height: 100%;
     transition: all linear 0.25s;
+    user-select: none;
+
+    .title {
+        text-transform: capitalize;
+    }
 }
 
 // button type
-.primary {
+.primary, .danger {
     background-color: var(--primaryLight);
     transition: all linear 0.25s;
 
@@ -54,11 +61,11 @@
 
 .transparent {
     background: none;
-    color: var(--white);
-    border: 1px solid var(--white);
+    // color: var(--black);
+    border-color: transparent;
     
     .title, .icon {
-        color: var(--white);
+        color: var(--black);
         transition: all linear 0.25s;
     }
 
@@ -71,6 +78,74 @@
     //         color: #657ef8;
     //     }
     // }
+}
+
+.light {
+
+    .title, .icon {
+        color: var(--white);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+
+        .title, .icon {
+            color: #657ef8;
+        }
+    }
+}
+
+.disabled {
+    background-color: #6c757d;
+
+    .title, .icon {
+        color: var(--white);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        background-color: #6c757d;
+    }
+}
+
+.view {
+    background-color: #00b4d7;
+    transition: all linear 0.25s;
+
+    .title, .icon {
+        color: var(--white);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        background-color: #14a4c1;
+    }
+}
+
+.edit {
+    background-color: #ffc107;
+    transition: all linear 0.25s;
+
+    .title, .icon {
+        color: var(--white);
+    }
+
+    .icon + .title, .title + .icon {
+        padding-left: 10px;
+    }
+
+    &:hover {
+        background-color: #e0a800;
+    }
 }
 
 .primary.active {
@@ -119,11 +194,14 @@
 }
 
 .large {
-    padding: 15px 35px;
-    min-width: 350px;
+    padding: 10px 0;
+    // min-width: 350px;
+    width: 100%;
+    margin: 10px 0;
 
     .title {
-        font-size: 20px;
+        font-size: 18px;
+        font-weight: 400;
     }
 
     .icon {
@@ -143,3 +221,5 @@
         transform: rotate(180deg);
     }
 }
+
+

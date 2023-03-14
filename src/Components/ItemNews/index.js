@@ -1,18 +1,30 @@
 import styles from "./ItemNews.module.scss";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
+import GlobalContext from "../../Contexts/GlobalContext";
+import { WindowScrollTop } from "../../util";
+import PropTypes from "prop-types";
+
+ItemNews.propTypes = {
+    data: PropTypes.object.isRequired,
+    href: PropTypes.string,
+    to: PropTypes.string,
+    setColumn: PropTypes.number,
+    type: PropTypes.string,
+}
 
 
 function ItemNews(
     {
         href,
         to,
-        setCategory,
         setColumn,
         type = "",
-
+        data,
     }) {
+    const { newsDetail, setNewsDetail } = useContext(GlobalContext);
+
     let Comp = "div";
     const propsComp = {};
     if (href) {
@@ -23,18 +35,24 @@ function ItemNews(
         propsComp.to = to;
     }
 
+    // class category
     let classesCategory = clsx(styles.category);
-    let newsCategory = "";
-    if (setCategory === "anime") {
-        classesCategory = clsx(styles.category, styles.animeCate);
-        newsCategory = "Anime";
-    } else if (setCategory === "manga") {
-        classesCategory = clsx(styles.category, styles.mangaCate);
-        newsCategory = "Truyện tranh";
-    } else {
-        // giải trí default :V
-        classesCategory = clsx(styles.category, styles.infoCate);
-        newsCategory = "Thông tin";
+    if (data) {
+        if (data.key_category === "anime") {
+            classesCategory = clsx(styles.category, styles.animeCate);
+        } else if (data.key_category === "comic") {
+            classesCategory = clsx(styles.category, styles.mangaCate);
+        } else if (data.key_category === "info") {
+            // giải trí default :V
+            classesCategory = clsx(styles.category, styles.infoCate);
+        }
+    }
+
+    var getTime = "";
+    // xử lý time 
+    if (data) {
+        let arrDateCreated = data.created_at.split(" ");
+        getTime = arrDateCreated[0].split("-").reverse().join("/");
     }
 
     let classesWrapper = clsx(styles.wrapper);
@@ -72,64 +90,58 @@ function ItemNews(
             {type == "default" || type == "" ?
                 <div className={classesWrapper}>
                     <div className={clsx(styles.item)}>
-                        <Comp className={clsx(styles.link)} {...propsComp}>
-                            <img src="https://s199.imacdn.com/ta/2022/12/22/4aad4c69a6d9d6a9_ffcd5eaeb7c4801e_5966216717215802769722.jpg" alt="" />
+                        <Comp className={clsx(styles.link)} {...propsComp}
+                            onClick={() => {
+                                setNewsDetail(data)
+                                WindowScrollTop();
+                            }}
+                        >
+                            <img src={data && data.thumbnail} alt="" />
                             <div className={clsx(styles.info)}>
                                 <h3 className={clsx(styles.title)}>
-                                    Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe
+                                    {data && data.title}
                                 </h3>
                                 <p className={clsx(styles.desc)}>
-                                    Lorem aaaaaaaaaaaaaaaaaa Gawr Gura tạm dừng hoạt động do vấn đề sức khỏeGawr Gura tạm dừng hoạt động do vấn đề sức khỏe
+                                    {data && data.content}
                                 </p>
                                 <div className={clsx(styles.itemBottom)}>
                                     <div className={clsx(styles.date)}>
-                                        22/15/2002
+                                        {data && getTime}
                                     </div>
-                                    <span className={classesCategory}>{newsCategory}</span>
+                                    <span className={classesCategory}>{data && data.name_category}</span>
                                 </div>
                             </div>
                         </Comp>
                     </div>
                 </div>
-                : type == "watched" || type == "following" ?
+                : type == "recommend" ?
                     <div className={classesWrapper}>
                         <div className={clsx(styles.item)}>
-                            <Comp className={clsx(styles.link)} {...propsComp}>
-                                <img src="https://s199.imacdn.com/ta/2022/12/22/4aad4c69a6d9d6a9_ffcd5eaeb7c4801e_5966216717215802769722.jpg" alt="" />
+                            <Comp className={clsx(styles.link)} {...propsComp}
+                                onClick={() => {
+                                    setNewsDetail(data)
+                                    WindowScrollTop()
+                                }}
+                            >
+                                <div className={clsx(styles.imgWrap)}>
+                                    <img src={data && data.thumbnail} alt="" />
+                                </div>
                                 <div className={clsx(styles.info)}>
                                     <h3 className={clsx(styles.title)}>
-                                        Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe
+                                        {data && data.title}
                                     </h3>
+                                    <div className={clsx(styles.itemBottom)}>
+                                        <div className={clsx(styles.date)}>
+                                            {data && getTime}
+                                        </div>
+                                        <span className={classesCategory}>{data && data.name_category}</span>
+                                    </div>
                                 </div>
                             </Comp>
                         </div>
                     </div>
-                    : type == "recommend" ?
-                        <div className={classesWrapper}>
-                            <div className={clsx(styles.item)}>
-                                <Comp className={clsx(styles.link)} {...propsComp}>
-                                    <div className={clsx(styles.imgWrap)}>
-                                        <img src="https://s199.imacdn.com/ta/2022/12/22/4aad4c69a6d9d6a9_ffcd5eaeb7c4801e_5966216717215802769722.jpg" alt="" />
-                                    </div>
-                                    <div className={clsx(styles.info)}>
-                                        <h3 className={clsx(styles.title)}>
-                                            Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe Gawr Gura tạm dừng hoạt động do vấn đề sức khỏe
-                                        </h3>
-                                        {/* <p className={clsx(styles.desc)}>
-                                    Lorem aaaaaaaaaaaaaaaaaa Gawr Gura tạm dừng hoạt động do vấn đề sức khỏeGawr Gura tạm dừng hoạt động do vấn đề sức khỏe
-                                </p> */}
-                                        <div className={clsx(styles.itemBottom)}>
-                                            <div className={clsx(styles.date)}>
-                                                22/15/2002
-                                            </div>
-                                            <span className={classesCategory}>{newsCategory}</span>
-                                        </div>
-                                    </div>
-                                </Comp>
-                            </div>
-                        </div>
-                        :
-                        ""
+                    :
+                    ""
             }
         </Fragment>
 

@@ -1,0 +1,93 @@
+.wrapper {
+    background-color: var(--white);
+    width: 100%;
+    padding: 10px 15px;
+
+    .heading {
+        color: var(--black);
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        user-select: none;
+        text-transform: capitalize;
+    }
+
+    .addUser {
+        margin: 10px 0;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    table,
+    td,
+    th {
+        border: 1px solid black;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    th {
+        height: 50px;
+        // font-size: 18px;
+        // font-weight: 600;
+    }
+
+    td {
+        padding: 5px 10px;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: center;
+    }
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    // min-height: calc(300px - 20px);
+    min-height: 180px;
+
+    .heading {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--black);
+        text-transform: capitalize;
+
+    }
+
+    .body {
+        user-select: none;
+
+        .delete {
+
+            .title {
+                margin: 15px 0 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            p {
+                margin: 10px 0;
+                font-size: 16px;
+                font-weight: 400;
+                text-transform: capitalize;
+
+                b {
+                    margin-left: 5px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    text-transform: none;
+                }
+            }            
+        }
+    }
+
+    .userActive {
+        display: flex;
+        justify-content: flex-end;
+    }
+}

@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Fragment, useEffect, useState } from "react";
 import styles from "./Test.module.scss";
 
+
 function Test() {
     const [data, setData] = useState([]);
 
@@ -10,7 +11,8 @@ function Test() {
             .then(res => res.json())
             .then(res => {
                 setData(res)
-                // console.log(res)
+                console.log(res)
+                // console.log("success")
             })
 
             .catch(() => {
@@ -21,8 +23,8 @@ function Test() {
     return (
         <Fragment>
             {data.map((item, index) => {
-                console.log(index)
-                console.log(item)
+                // console.log(index)
+                // console.log(item)
                 return (
                     <div className={clsx(styles.item)} key={index}>
                         <h2>Title: {item.title}</h2>

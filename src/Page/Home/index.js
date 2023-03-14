@@ -22,6 +22,10 @@ import ItemManga from "../../Components/ItemManga";
 
 // data 
 import { dataManga } from "../../data/manga";
+import axios from "axios";
+import { WindowScrollTop } from "../../util";
+
+import Image from "../../Components/Image";
 
 const dataSlider = [
     {
@@ -167,6 +171,7 @@ const dataRecommend = [
 export default function Home() {
     const [dataEpisodeLatest, setDataEpisodeLatest] = useState([]);
     const [dataMangaItem, setDataMangaItem] = useState(dataManga);
+    const [dataNewsLastest, setDataNewsLastest] = useState([]);
 
     const windowScroll = () => {
         window.scroll({
@@ -175,37 +180,19 @@ export default function Home() {
         });
     }
 
-    // fetch api
-    /*
+    // fetch api new recommend
     useEffect(() => {
-        async function fetchData() {
-            let headers = new Headers();
-
-            headers.append('Content-Type', 'application/json');
-            headers.append('Accept', 'application/json');
-            headers.append('Origin','http://localhost:3000');
-            
-            
-            await fetch("http://localhost/backend/api/anime/index.php", {
-                mode: 'cors',
-                method: 'GET',
-                headers: headers
+        axios.get("http://localhost/manga-comic-be/api/news/read.php")
+            .then((res) => {
+                setDataNewsLastest(res.data);
             })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                    if(data.status != null && data.status === "success") {
-                        setDataEpisodeLatest(data.data)
-                    } 
 
-                })
-
-                .catch(err => console.error(err))
-        }
-
-        fetchData();
+            .catch(() => {
+                console.log("error")
+            })
     }, []);
-    */
+    var listNewsLastest = dataNewsLastest.slice(0, 8);
+
 
     return (
         <Fragment>
@@ -227,17 +214,30 @@ export default function Home() {
                                                 <h5 className={clsx(styles.desc)}>
                                                     {item.desc}
                                                 </h5>
-                                                <div className={clsx(styles.listCategory)}>
+                                                {/* <div className={clsx(styles.listCategory)}>
                                                     {item.listCategory.map((itemCategory, index) => {
                                                         return (
-                                                            <Button transparent small key={index} to={`/truyen-tranh/${itemCategory.key}`}
+                                                            <Button primary small key={index} to={`/truyen-tranh/${itemCategory.key}`}
                                                                 onClick={() => {
                                                                     windowScroll();
                                                                 }}
                                                             >{itemCategory.title}</Button>
                                                         )
                                                     })}
-                                                </div>
+                                                </div> */}
+                                                {/* fix */}
+                                                <ul className={clsx(styles.genres)}>
+                                                    {item.listCategory.map((itemCategory, index) => (
+                                                        <Link to={`/truyen-tranh/${itemCategory.key}`} key={index}
+                                                            onClick={() => {
+                                                                windowScroll();
+                                                            }}
+                                                        >
+                                                            <li>{itemCategory.title}</li>
+                                                        </Link>
+                                                    ))}
+                                                </ul>
+                                                {/* end */}
                                                 <div className={clsx(styles.userActive)}>
                                                     <Button primary medium scale>Đọc ngay</Button>
                                                     <Button outline medium scale>Chi tiết</Button>
@@ -285,14 +285,9 @@ export default function Home() {
                     Lastest news
                 </Heading>
                 <section className={styles.wrapper}>
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
-                    <ItemNews type="recommend" setColumn={4} />
+                    {listNewsLastest.map((item, index) => (
+                        <ItemNews type="recommend" setColumn={4} data={item} key={index} to={`/news/detail/${item.id}`} />
+                    ))}                    
                 </section>
 
                 <Heading primary iconRight={<HeadingRightIcon />}>

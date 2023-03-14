@@ -1,0 +1,37 @@
+.wrapper {
+    // item in month
+    width: calc(100% / 7);
+    min-height: 150px;
+    border: 1px solid grey;
+    text-align: center;
+    cursor: pointer;
+
+    .header {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--black);
+    }
+
+    .dayNumber {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--textGrey);
+    }
+
+    .dayNumber.active {
+        background-color: #00b4d7;
+        color: var(--white);
+    }
+
+    .contentWrapper {
+        width: 100%;
+        margin-top: 5px;
+        padding: 0 2.5px;
+        text-align: start;
+
+        .task {
+            font-size: 16px;
+            font-weight: 400;
+        }
+    }
+}

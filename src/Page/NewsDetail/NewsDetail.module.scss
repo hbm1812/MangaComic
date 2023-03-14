@@ -3,14 +3,14 @@
     width: 100%;
     padding: 0 60px;
     // flex-wrap: wrap;
-    // flex-direction: row;
+    // flex-direction: row;    
 
     .contentWrap {
         width: 100%;
         display: flex;
 
         .article {
-            width: 75%;
+            width:100%;
 
             .articleDate {
                 margin-top: 10px;

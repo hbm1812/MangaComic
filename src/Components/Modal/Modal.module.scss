@@ -1,0 +1,71 @@
+.wrapper {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 9999;
+    background-color: var(--bgTransparent-2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    .main {
+        background-color: var(--white);
+        width: 800px;
+        max-width: calc(100% - 32px);
+        // min-height: 300px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        border-radius: 12px;
+        padding: 10px 15px;
+        max-height: calc(100vh - 65px);
+        overflow-y: scroll;    
+        animation: modalFadeIn ease 0.5s;        
+
+        .content {            
+            padding: 10px 0;            
+        }
+
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            // border-radius: 12px;
+            background-color: transparent;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #71717a;
+            border-radius: 15px;
+            transition: var(--transitionFast);
+        
+            &:hover {
+                background: #b0b0b8;
+        
+            }
+        }
+    }
+
+    .mainCustom {
+        max-width: calc(100% - 32px);
+        border-radius: 12px;
+        overflow: hidden;
+        max-height: calc(100vh - 65px);
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}

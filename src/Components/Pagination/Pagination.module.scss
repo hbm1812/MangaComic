@@ -1,0 +1,27 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+
+    .pageNumber {
+        background: var(--primaryLight);
+        border-radius: 2px;
+        height: 30px;
+        margin: 0 5px 10px;
+        padding: 5px;
+        width: 40px;
+        color: var(--white);
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all linear 0.25s;      
+        
+        &:hover {
+            background: var(--primary);
+        }
+    }
+    
+}

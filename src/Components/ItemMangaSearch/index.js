@@ -3,6 +3,12 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import Image from "../Image";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+
+ItemMangaSearch.propTypes = {
+    data: PropTypes.object.isRequired,
+    onClick: PropTypes.func,
+}
 
 function ItemMangaSearch({ data, onClick }) {
     const props = {

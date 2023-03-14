@@ -2,6 +2,32 @@ import styles from './Button.module.scss';
 import clsx from 'clsx';
 // link trong react route dom là link nội bộ trong web
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+Button.propTypes = {
+    to: PropTypes.string,
+    href: PropTypes.string,
+    onClick: PropTypes.func,
+    primary: PropTypes.bool,
+    outline: PropTypes.bool,
+    transparent: PropTypes.bool,
+    small: PropTypes.bool,
+    medium: PropTypes.bool,
+    large: PropTypes.bool,
+    active: PropTypes.bool,
+    scale: PropTypes.bool,
+    danger: PropTypes.bool,
+    edit: PropTypes.bool,
+    view: PropTypes.bool,
+    disabled: PropTypes.bool,
+    light: PropTypes.bool,
+
+    iconLeft: PropTypes.element,
+    iconRight: PropTypes.element,
+
+    children: PropTypes.node,
+
+}
 
 // ...passProps để truyền các props khác từ các layout sd component này thêm vào 
 function Button({
@@ -18,12 +44,18 @@ function Button({
         active = false,
         iconLeft,
         iconRight,
-        scale,
-        rotate, 
+        scale = false,
+        rotate = false,
+        danger = false,
+        edit = false,
+        view = false,
+        disabled = false,  
+        light = false,      
     }) {
     let Comp = 'button';
     const props = {
-        onClick,        
+        onClick,    
+        disabled,    
     };
 
     if(to) {
@@ -39,12 +71,18 @@ function Button({
         [styles.primary]: primary,
         [styles.outline]: outline,
         [styles.transparent]: transparent,
+        [styles.light]: transparent && light,
         [styles.small]: small,
         [styles.medium]: medium,
         [styles.large]: large,
         [styles.active]: active,
         [styles.scale]: scale,
         [styles.rotate]: rotate,
+        [styles.danger]: danger,
+        [styles.edit]: edit,
+        [styles.view]: view,
+        [styles.disabled]: disabled,
+
     });
     return ( 
         <Comp className={classes} {...props}>
