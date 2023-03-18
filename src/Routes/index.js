@@ -23,13 +23,7 @@ import Calendar from "../Page/Admin/Calendar";
 // public routes (k cần đăng nhập vẫn sd đc)
 const publicRoutes = [
     // mặc định: layout = DefaultLayout :v
-    { path: "/", component: Home },
-    {
-        path: "/truyen-tranh", component: Manga, childRoute: {
-            path: ":mangaId",
-            component: Manga
-        }
-    },
+    { path: "/", component: Home },   
     {
         path: "/truyen-tranh-ct", component: MangaDetail, childRoute: {
             path: ":mangaId",
@@ -46,6 +40,25 @@ const publicRoutes = [
     // config news 
     { path: "/news", component: News },
     { path: "/news/detail/:newsId", component: NewsDetail },    
+
+    // manga
+    {
+        path: "/manga", component: Manga, childRoute: {
+            path: ":mangaId",
+            component: Manga
+        }
+    },
+    {
+        path: "/manga/detail", component: MangaDetail, childRoute: {
+            path: ":nameManga/:idManga",
+            component: MangaDetail
+        }
+    },
+    { path: "/manga/read", component: ReadManga, layout: OnlyBackground, childRoute: {
+        path: ":nameManga/:idChapter",
+        component: ReadManga,
+    }},
+
 
     // admin
     { path: "/admin", component: Dashboard, layout: AdminLayout },

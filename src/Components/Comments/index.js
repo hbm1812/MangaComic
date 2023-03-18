@@ -38,10 +38,18 @@ function Comments({ currentUserId }) {
     // console.log("checkTypeBtn" , checkTypeBtn);
 
     const param = useParams();
-    // console.log("param", param)
-    // console.log("dataComments", dataComments)
+    console.log("param", param)    
+
     useEffect(() => {
-        axios.get(`http://localhost/manga-comic-be/api/comments/show.php?news_id=${param.newsId}`)
+        let checkType = "";
+        if (param.newsId) {
+            checkType = `news_id=${param.newsId}`;
+        } else if (param.idManga) {
+            checkType = `story_id=${param.idManga}`;
+        }
+        console.log("checkType", checkType);
+
+        axios.get(`http://localhost/manga-comic-be/api/comments/show.php?${checkType}`)
             .then((res) => {
                 console.log("data", res.data);
                 setDataComments(res.data);
@@ -73,7 +81,8 @@ function Comments({ currentUserId }) {
 
         console.log("image add cmt", image);
         data.append("user_id", currentUserId);
-        data.append("news_id", param.newsId);
+        { param.newsId && data.append("news_id", param.newsId) };
+        { param.idManga && data.append("story_id", param.idManga) };
         if (!(parentId === null)) {
             data.append("parent_id", parentId);
         }
@@ -93,7 +102,7 @@ function Comments({ currentUserId }) {
             .catch(() => {
                 console.log("error");
             })
-        
+
 
         console.log(data);
         console.log(Object.fromEntries(data.entries()))
@@ -144,7 +153,8 @@ function Comments({ currentUserId }) {
         console.log("parent id", parentId);
 
         data.append("user_id", currentUserId);
-        data.append("news_id", param.newsId);
+        { param.newsId && data.append("news_id", param.newsId) };
+        { param.idManga && data.append("story_id", param.idManga) };
         if (!(parentId === null)) {
             // console.log("add parent id", parentId);
             data.append("parent_id", parentId);
@@ -164,7 +174,7 @@ function Comments({ currentUserId }) {
                 setShowModalIsSubComment(false);
                 setCheckTypeBtn("");
                 setShowInputClone(false);
-                
+
                 setFetchApiComment(!fetchApiComment);
             })
             .catch(() => {
@@ -183,7 +193,8 @@ function Comments({ currentUserId }) {
         console.log("image edit", image)
         data.append("id", currentId)
         data.append("user_id", currentUserId);
-        data.append("news_id", param.newsId);
+        { param.newsId && data.append("news_id", param.newsId) };
+        { param.idManga && data.append("story_id", param.idManga) };
         if (!(parentId === null)) {
             // console.log("add parent id", parentId);
             data.append("parent_id", parentId);

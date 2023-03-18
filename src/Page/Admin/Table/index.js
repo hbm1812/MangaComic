@@ -167,6 +167,7 @@ function Table() {
 
             .catch(() => {
                 console.log("error")
+                
             })
     }, [openModalCreateUser, openModalUpdateUser, openModalDeleteUser]);
 

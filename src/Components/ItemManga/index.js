@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { BookOpenIcon } from "../Icon";
 import Button from "../Button";
 
-function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data = {}}) {    
+function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data = {} }) {
     let Comp = "div";
     const props = {};
     if (to) {
@@ -21,34 +21,34 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
             {
                 arrStylesWrapper.push((styles.oneColumn))
                 break;
-            } 
+            }
         case 2:
             {
                 arrStylesWrapper.push((styles.twoColumn))
                 break;
-            } 
+            }
         case 3:
             {
                 arrStylesWrapper.push((styles.threeColumn))
                 break;
-            } 
+            }
         case 4:
             {
                 arrStylesWrapper.push((styles.fourColumn))
                 break;
-            } 
+            }
         case 5:
             {
                 arrStylesWrapper.push((styles.fiveColumn))
                 break;
-            } 
+            }
         case 6:
             {
                 arrStylesWrapper.push((styles.sixColumn))
                 break;
             }
         default:
-            break; 
+            break;
 
     }
 
@@ -63,14 +63,14 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
     });
 
     // DATA
-    if(data) {
-        if(data.status == 1) {
+    if (data) {
+        if (data.status_id == 2) {
             coming = true;
-        } else if(data.status == 2) {
+        } else if (data.status_id == 3) {
             complete = true;
         }
-    } 
-    
+    }
+
     // thumbnail
     // name
     // status 1 coming || 2 complete || 0 đang tiến hành :v
@@ -83,22 +83,20 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
                 <img src={data.thumbnail || "https://s199.imacdn.com/tt24/2020/03/27/ee63facad9f0518a_442115a9843e7858_255011585324379345957.jpg"} alt="" referrerPolicy="no-referrer" />
                 <div className={clsx(styles.info)}>
                     <h3 className={clsx(styles.infoName)}>
-                        {data.name || "Name manga Name manga Name manga Name manga Name manga Name manga Name mangaName mangaName mangaName mangaName manga"}                        
-                        
+                        {data.name || "Name manga Name manga Name manga Name manga Name manga Name manga Name mangaName mangaName mangaName mangaName manga"}
+
                     </h3>
                     <div className={clsx(styles.infoBottom)}>
-                        <p className={clsx(styles.infoEpisodeName)}>Chap {data.chapterLastest || 0}</p>
-                        <p className={clsx(styles.infoEpisodeView)}><span>{data.view || 3000}</span> lượt xem</p>
+                        <p className={clsx(styles.infoEpisodeName)}>{data && "Chap " + data.chapter_lastest}</p>
+                        <p className={clsx(styles.infoEpisodeView)}><span>{data.view_count}</span> lượt xem</p>
                     </div>
-                </div>                
+                </div>
                 <div className={coming ? clsx(styles.itemProgress, styles.comingSoon) : complete ? clsx(styles.itemProgress, styles.complete) : clsx(styles.hidden)}>
-                    {
-                        complete ? "Hoàn thành" : coming ? "Sắp chiếu" : ""
-                    }
+                    {data && data.status_name}
                 </div>
                 <div className={clsx(styles.itemPlay)}>
                     <BookOpenIcon className={clsx(styles.itemPlayIcon)} />
-                </div>                
+                </div>
             </div>
         </Comp>
     );

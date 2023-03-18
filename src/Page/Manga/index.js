@@ -1,11 +1,11 @@
 import styles from "./Manga.module.scss";
 import clsx from "clsx";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../Components/Button";
 import Heading from "../../Components/Heading";
 import ItemManga from "../../Components/ItemManga";
-
+import axios from "axios";
 // image genres
 import actionImg from "../../assets/images/genres/action.jpg";
 import adventureImg from "../../assets/images/genres/adventure.jpg";
@@ -677,21 +677,70 @@ export default function Manga() {
     // route dom
     const params = useParams();
     // console.log(params.mangaId);
-    // hook
-    const [headingGenres, setHeadingGenres] = useState(params.mangaId || "action");
-    const [keyGenres, setKeyGenres] = useState(params.mangaId || "action");
+    const [dataCategory, setDataCategory] = useState([]);
+    // data render 
+    const [headingGenres, setHeadingGenres] = useState("");
+    const [keyGenres, setKeyGenres] = useState(params.mangaId ?? "");
     const [numberRender, setNumberRender] = useState(12);
     const [dataManga, setDataManga] = useState([]);
+    // load data from fetch api
+    const [dataMangaAll, setDataMangaAll] = useState([]);
+    const [dataCategoryInManga, setDataCategoryInManga] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/stories/getcategory.php")
+            .then((res) => {
+                // console.log("data", res.data)
+                setDataCategory(res.data)
+                // setHeadingGenres(res.data[0].name)
+                setHeadingGenres("All manga")
+                setKeyGenres("all-manga")
+                PrepareDataManga()
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/stories/read.php")
+            .then((res) => {
+                // console.log("data", res.data)                
+                setDataMangaAll(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, []);
+
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/stories/findCategory.php")
+            .then((res) => {
+                // console.log("data", res.data)                
+                setDataCategoryInManga(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, []);
 
     const PrepareDataManga = () => {
-        setDataManga(DATA_MANGA.reduce((filtered, manga, index) => {
+        setDataManga(dataMangaAll.reduce((filtered, manga, index) => {
+            // console.log("manga", manga);
+            let getAllcategoryInManga = dataCategoryInManga.filter((item) => item.story_id === manga.id)
+            // console.log("getAllcategoryInManga", getAllcategoryInManga);
             if (filtered.length < numberRender) {
-                if (manga.category == keyGenres.toLowerCase()) {
-                    let man = DATA_MANGA[index];
-                    filtered.push(man);
-                }
+                getAllcategoryInManga.map((getItem, index) => {
+                    // console.log("getItem", getItem)
+                    if (getItem.keyword === keyGenres) {
+                        let man = manga;
+                        filtered.push(man);
+                    }
+                })
             }
-
             return filtered;
         }, []));
     }
@@ -706,58 +755,89 @@ export default function Manga() {
         <Fragment>
             <section className={clsx(styles.container)} >
                 <div className={clsx(styles.genres)}>
-                    {
-                        GENRES_ITEM.map((item, index) => {
-                            
-                            return (
-                                <div className={clsx(styles.itemWrap)} key={index}
-                                    onClick={() => {
-                                        setHeadingGenres(item.title);
-                                        setKeyGenres(item.key);
-                                        setNumberRender(12);
-                                    }}
-                                >
-                                    <Link to={item.key}>
-                                        <div className={clsx(styles.item)}
-                                            style={{
-                                                background: `url(${item.background}) center/cover no-repeat`
-                                            }}
-                                        >
-                                            <p className={clsx(styles.title)}>
-                                                {item.title}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                </div>
-                            )
-                        })
-                    }
+                    {dataCategory.map((item, index) => {
+                        return (
+                            <div className={clsx(styles.itemWrap)} key={index}
+                                onClick={() => {
+                                    setHeadingGenres(item.name);
+                                    setKeyGenres(item.keyword);
+                                    setNumberRender(12);
+                                }}
+                            >
+                                <Link to={item.keyword}>
+                                    <div className={clsx(styles.item)}
+                                        style={{
+                                            background: `url(${item.background}) center/cover no-repeat`
+                                        }}
+                                    >
+                                        <p className={clsx(styles.title)}>
+                                            {item.name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            </div>
+                        )
+                    })}
                 </div>
-                <div className={clsx(styles.content)}>
-                    <Heading>{headingGenres}</Heading>
-                    <div className={clsx(styles.wrapper)}>
-                        {
-                            dataManga.map((item, index) => {
-                                return (
-                                    <ItemManga setColumn={6} key={index} data={item} />
-                                )
-                            })
-                        }
-                    </div>
-                </div>
-                {dataManga.length != 0 ?
-                    <div className={clsx(styles.viewMore)}>
-                        <Button primary medium onClick={() => {
-                            setNumberRender(numberRender + 6);
-                        }}>Xem thêm</Button>
-                    </div>
-                    :
-                    <div className={clsx(styles.error)}>
-                        <div className={clsx(styles.chatBox)}>
-                            <p>Chưa có gì cho thể loại này</p>
+
+                {params.mangaId === undefined ?
+                    <Fragment>
+                        <div className={clsx(styles.content)}>
+                            <Heading>{headingGenres}</Heading>
+                            <div className={clsx(styles.wrapper)}>
+                                {
+                                    dataMangaAll.map((item, index) => {
+                                        return (
+                                            <ItemManga setColumn={6} key={index} data={item} />
+                                        )
+                                    })
+                                }
+                            </div>
                         </div>
-                        <img src="https://www.sciener.my/wp-content/uploads/2018/10/scienerc-404-error-.png" alt="" />
-                    </div>
+                        {dataMangaAll.length != 0 ?
+                            <div className={clsx(styles.viewMore)}>
+                                <Button primary medium onClick={() => {
+                                    setNumberRender(numberRender + 6);
+                                }}>Xem thêm</Button>
+                            </div>
+                            :
+                            <div className={clsx(styles.error)}>
+                                <div className={clsx(styles.chatBox)}>
+                                    <p>Chưa có gì cho thể loại này</p>
+                                </div>
+                                <img src="https://www.sciener.my/wp-content/uploads/2018/10/scienerc-404-error-.png" alt="" />
+                            </div>
+                        }
+                    </Fragment>
+                    :
+                    <Fragment>
+                        <div className={clsx(styles.content)}>
+                            <Heading>{headingGenres}</Heading>
+                            <div className={clsx(styles.wrapper)}>
+                                {
+                                    dataManga.map((item, index) => {
+                                        return (
+                                            <ItemManga setColumn={6} key={index} data={item} />
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>
+                        {dataManga.length != 0 ?
+                            <div className={clsx(styles.viewMore)}>
+                                <Button primary medium onClick={() => {
+                                    setNumberRender(numberRender + 6);
+                                }}>Xem thêm</Button>
+                            </div>
+                            :
+                            <div className={clsx(styles.error)}>
+                                <div className={clsx(styles.chatBox)}>
+                                    <p>Chưa có gì cho thể loại này</p>
+                                </div>
+                                <img src="https://www.sciener.my/wp-content/uploads/2018/10/scienerc-404-error-.png" alt="" />
+                            </div>
+                        }
+                    </Fragment>
                 }
             </section>
         </Fragment>

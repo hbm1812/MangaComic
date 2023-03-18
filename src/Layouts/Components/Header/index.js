@@ -14,7 +14,7 @@ const MENU_ITEM = [
     {
         icon: null,
         title: "Truyện tranh",
-        to: "/truyen-tranh"
+        to: "/manga"
     },
     {
         icon: null,

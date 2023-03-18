@@ -16,22 +16,22 @@
     --black: #000;
     --textColor: #ddd;
     --primary: #d80f16;
-    --primaryOpacity: rgba(216,15,22,.6);
+    --primaryOpacity: rgba(216, 15, 22, .6);
     --primaryLight: #f43f5e;
-    --blackOpacity: rgba(0,0,0,.6);
-    --whiteOpacity: rgba(255,255,255,.6);
-    
+    --blackOpacity: rgba(0, 0, 0, .6);
+    --whiteOpacity: rgba(255, 255, 255, .6);
+
     // background
-    --bgTransparent: rgba(17,17,17,0.15);
-    --bgTransparent-1: rgba(17,17,17,0.25);
-    --bgTransparent-2: rgba(17,17,17,0.5);
-    --bgTransparent-3: rgba(17,17,17,0.75);
-    --bgTransparent-4: rgba(17,17,17,0.9);
-    --bgLinear-gradient-blackColumn: linear-gradient(0deg,#202125,rgba(32,33,37,0) 50%,#202125);
-    --bgLinear-gradient-blackRow: linear-gradient(90deg,#202125,rgba(32,33,37,.6) 40%,rgba(32,33,37,0) 60%,rgba(32,33,37,0) 80%,#202125);
+    --bgTransparent: rgba(17, 17, 17, 0.15);
+    --bgTransparent-1: rgba(17, 17, 17, 0.25);
+    --bgTransparent-2: rgba(17, 17, 17, 0.5);
+    --bgTransparent-3: rgba(17, 17, 17, 0.75);
+    --bgTransparent-4: rgba(17, 17, 17, 0.9);
+    --bgLinear-gradient-blackColumn: linear-gradient(0deg, #202125, rgba(32, 33, 37, 0) 50%, #202125);
+    --bgLinear-gradient-blackRow: linear-gradient(90deg, #202125, rgba(32, 33, 37, .6) 40%, rgba(32, 33, 37, 0) 60%, rgba(32, 33, 37, 0) 80%, #202125);
 
     --bgHoverGray: hsla(0, 0%, 100%, .2);
-    
+
     --textGrey: grey;
     // border 
     --borderPrimary: 3px solid rgba(255, 255, 255, 0.1);
@@ -53,7 +53,7 @@
     // mode dark
     --bgDarkMode: #333;
     --primaryDarkMode: #1ab394;
-    --primaryOpacityDarkMode: rgba(5,95,60,.6);
+    --primaryOpacityDarkMode: rgba(5, 95, 60, .6);
 
 }
 
@@ -68,7 +68,9 @@ body {
     text-rendering: optimizeSpeed;
 }
 
-button, input, [tabindex] {
+button,
+input,
+[tabindex] {
     outline: none;
     border: none;
 }
@@ -82,3 +84,42 @@ a[href] {
 .react-slideshow-container .default-nav {
     margin: 25px;
 }
+
+// // fix lib scrolling menu 
+// .react-horizontal-scrolling-menu--wrapper {
+//     flex-wrap: wrap;
+//     justify-content: center;
+// }
+
+// .react-horizontal-scrolling-menu--scroll-container {
+//     flex-basis: 100%;
+//     flex-shrink: 0;
+// }
+
+// /* Change position of container so arrows will be at top/bottom */
+// .react-horizontal-scrolling-menu--scroll-container {
+//     order: -1;
+//     /* order: 1; for top position */
+// }
+
+// .react-horizontal-scrolling-menu--wrapper {
+//     flex-wrap: wrap;
+//     justify-content: center;
+// }
+
+// .react-horizontal-scrolling-menu--scroll-container {
+//     order: 1;
+//     flex-basis: 100%;
+//     flex-shrink: 0;
+// }
+
+// .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
+//     display: none;
+// }
+
+// .react-horizontal-scrolling-menu--scroll-container {
+//     -ms-overflow-style: none;
+//     /* IE and Edge */
+//     scrollbar-width: none;
+//     /* Firefox */
+// }

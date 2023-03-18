@@ -3,10 +3,9 @@ import Button from "../../Components/Button";
 import { DotCircleIcon, PlayIcon, HeartIcon, FaceSmileIcon, CaretDownIcon, CircleCheckIcon } from "../../Components/Icon";
 import styles from "./MangaDetail.module.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Heading from "../../Components/Heading";
 import Character from "../../Components/Character";
-import axios from "axios";
 
 // test img
 import Lena86 from "../../assets/images/characters/lena86.png";
@@ -17,7 +16,74 @@ import ItemManga from "../../Components/ItemManga";
 // data
 import { dataManga } from "../../data/manga";
 import Comments from "../../Components/Comments";
-import GlobalContext from "../../Contexts/GlobalContext";
+
+
+const SOURCES = [
+    {
+        sources: "comik",
+    },
+    {
+        sources: "nettruyen",
+    },
+    {
+        sources: "mangaK",
+    }
+]
+
+const CHAPTER = [
+    {
+        title: "Giới thiệu chung",
+        chapter: 1,
+    },
+    {
+        title: "Khởi hành",
+        chapter: 2,
+    },
+    {
+        title: "Gặp gỡ",
+        chapter: 3,
+    },
+    {
+        title: "định mệnh",
+        chapter: 4,
+    },
+    {
+        title: "đại chiến bùng nổ :V",
+        chapter: 5,
+    },
+    {
+        title: "người bạn mới",
+        chapter: 6,
+    },
+    {
+        title: "cuộc chiến vô hạn",
+        chapter: 7,
+    },
+    {
+        title: "lorem impsum",
+        chapter: 8,
+    },
+    {
+        title: "hello",
+        chapter: 9,
+    },
+    {
+        title: "hello",
+        chapter: 10,
+    },
+    {
+        title: "hello",
+        chapter: 11,
+    },
+    {
+        title: "hello",
+        chapter: 101,
+    },
+    {
+        title: "hello",
+        chapter: 102,
+    },
+]
 
 const CHARACTER = [
     {
@@ -120,205 +186,123 @@ const CHARACTER = [
 
 function MangaDetail() {
     const params = useParams();
-    // console.log("params", params)
     const navigate = useNavigate();
-    const {dataItemChapter, setDataItemChapter} = useContext(GlobalContext);
-    console.log("dataItemChapter", dataItemChapter)
-    // sources languages
-    const [selectLanguages, setSelectLanguages] = useState("");
-    const [toggleMenuLanguages, setToggleMenuLanguages] = useState(false);
+
+    const [status, setStatus] = useState("complete");
+    // Sources
+    const [sources, setSources] = useState(SOURCES);
+    const [selectSource, setSelectSource] = useState(SOURCES[0].sources)
+    const [toggleMenuSource, setToggleMenuSource] = useState(false);
     // chapter
-    const [selectChapter, setSelectChapter] = useState("1 - 10")
+    const [chapter, setChapter] = useState(CHAPTER);
+    const [selectChapter, setSelectChapter] = useState(`${CHAPTER[0].chapter} - ${CHAPTER[9].chapter}`.toString())
     const [toggleMenuChapter, setToggleMenuChapter] = useState(false);
     // characters
     const [toggleDetailChar, setToggleDetailChar] = useState(false);
     const [showDetailChar, setShowDetailChar] = useState(-1);
 
     // data 
-    const [itemManga, setItemManga] = useState([]);
-    const [dataCategoryInStory, setDataCategoryInStory] = useState([]);
-    const [dataChapter, setDataChapter] = useState([]);
-    const [dataLanguages, setDataLanguages] = useState([]);
+    const [dataMangaItem, setDataMangaItem] = useState(dataManga);
+    const [showManga, setShowManga] = useState(params.mangaId);
+    const [itemManga, setItemManga] = useState(
+        dataMangaItem.filter((item, index) => {
+            return item.id == showManga
+        }));
 
-    // findStory
-    useEffect(() => {
-        axios.get(`http://localhost/manga-comic-be/api/stories/findStory.php?keyword=${params.nameManga}`)
-            .then((res) => {
-                // setDataMangaItem(res.data);
-                // console.log("item data", res.data)
-                setItemManga(res.data)
-            })
-
-            .catch(() => {
-                console.log("error")
-            })
-    }, []);
-
-    // get all category in story
-    useEffect(() => {
-        axios.get("http://localhost/manga-comic-be/api/stories/findcategory.php")
-            .then((res) => {
-                setDataCategoryInStory(res.data)
-            })
-
-            .catch(() => {
-                console.log("error")
-            })
-    }, []);
-    let findCategory = [];
-    if (itemManga.length !== 0) {
-        findCategory = dataCategoryInStory.filter(item => item.story_id === itemManga[0].id)
-    }
-
-    let getSatisfied = 0;
-    if (itemManga.length !== 0) {
-        if (itemManga[0].view_count !== 0 && itemManga[0].favorite_count !== 0) {
-            getSatisfied = itemManga[0].view_count / itemManga[0].favorite_count;
-        } else {
-            getSatisfied = 0;
-        }
-    } else {
-        getSatisfied = 0
-    }
-
-    // find chapter
-    useEffect(() => {
-        axios.get(`http://localhost/manga-comic-be/api/stories/getChapter.php?keyword=${params.nameManga}`)
-            .then((res) => {
-                // setDataMangaItem(res.data);
-                // console.log("data chapter", res.data)
-                setDataChapter(res.data)
-            })
-
-            .catch(() => {
-                console.log("error")
-            })
-    }, []);
-
-    const getListChapter = dataChapter.reduce((newArr, item, index) => {
-        if (item.languages === selectLanguages) {
-            let startChaper = (item.name).split(" ");
-            let getStartIndex = startChaper[startChaper.length - 1];
-            let convertStartIndex = parseInt(getStartIndex);
-            let getChapterFromTo;
-            if (convertStartIndex === 1) {
-                let start = convertStartIndex;
-                let end = convertStartIndex * 10;
-                getChapterFromTo = `${start} - ${end}`;
-                newArr.push(getChapterFromTo);
-            } else if (convertStartIndex > 1) {
-                let start = convertStartIndex * 10 - 9;
-                let end = convertStartIndex * 10;
-
-                let check = dataChapter[dataChapter.length - 1].name.split(" ");
-                let getChapter = check[check.length - 1];
-                let convertGetChapter = parseInt(getChapter);
-
-                if (start < convertGetChapter) {
-                    getChapterFromTo = `${start} - ${end}`;
-                    newArr.push(getChapterFromTo);
-                }
-
-            }
-        }
-
-
-        return newArr;
-    }, [])
-    // console.log("getListChapter", getListChapter)
-    // console.log("dataChapter", dataChapter)
-
-    // get all languages in story
-    useEffect(() => {
-        axios.get(`http://localhost/manga-comic-be/api/stories/getLanguagesInChapter.php?keyword=${params.nameManga}`)
-            .then((res) => {
-                // setDataMangaItem(res.data);
-                setDataLanguages(res.data)
-                if (res.data) {
-                    setSelectLanguages(res.data[0].languages);
-                }
-            })
-
-            .catch(() => {
-                console.log("error")
-            })
-    }, []);
-    // console.log("dataLanguages", dataLanguages)
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.banner)}
-                style={{ background: `url(${itemManga.length !== 0 && itemManga[0].background}) center/cover no-repeat` }}
+                style={{ background: `url(${itemManga[0].background || "https://www.mainmain.id/uploads/post/2022/12/07/One-Piece.jpg"}) center/cover no-repeat` }}
             >
                 <div className={clsx(styles.info)}>
                     <div className={clsx(styles.imageWrap)}>
-                        {itemManga.length !== 0 &&
-                            <img src={itemManga[0].thumbnail} alt="" />
-                        }
-
+                        <img src={itemManga[0].thumbnail || "https://kaguya.live/_next/image?url=https%3A%2F%2Fs4.anilist.co%2Ffile%2Fanilistcdn%2Fmedia%2Fmanga%2Fcover%2Flarge%2Fbx30013-oT7YguhEK1TE.jpg&w=1920&q=35"} alt="" />
+                        {/* <img src="https://kaguya.live/_next/image?url=https%3A%2F%2Fs4.anilist.co%2Ffile%2Fanilistcdn%2Fmedia%2Fmanga%2Fcover%2Flarge%2Fbx30013-oT7YguhEK1TE.jpg&w=1920&q=35" alt="" /> */}
                     </div>
                     <div className={clsx(styles.detail)}>
                         <div className={clsx(styles.detailTop)}>
                             <Button primary medium scale iconLeft={<PlayIcon />}
-                                onClick={() => { }}
+
                             >Read Now</Button>
-                            <Button outline medium scale
-                                onClick={() => { }}
-                            >Chapter Lastest</Button>
+                            <Button outline medium scale>Chapter Lastest</Button>
                         </div>
                         <div className={clsx(styles.detailMain)}>
                             <h1 className={clsx(styles.name)}>
-                                {itemManga.length !== 0 && itemManga[0].name}
+                                {itemManga[0].name || "name manga"}
                             </h1>
                             <ul className={clsx(styles.genres)}>
-                                {findCategory.length !== 0 && findCategory.map((item, index) => {
-                                    return (
-                                        <Link to={`/manga/${item.keyword}`} key={index}>
-                                            <li>{item.name}</li>
+                                {
+                                    itemManga[0].listCategory.map((item, index) => (
+                                        <Link to={`/truyen-tranh/${item.key}`} key={index}>
+                                            <li>{item.title}</li>
                                         </Link>
-                                    )
-                                })}
+                                    ))
+                                }
+
+                                {/* <Link to="/truyen-tranh">
+                                <li>Adventure</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Fantasy</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Action</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Adventure</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Fantasy</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Action</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Adventure</li>
+                            </Link>
+                            <Link to="/truyen-tranh">
+                                <li>Fantasy</li>
+                            </Link> */}
                             </ul>
                             <h5 className={clsx(styles.desc)}>
-                                {itemManga.length !== 0 && itemManga[0].desc}
+                                {itemManga[0].desc}
                             </h5>
                         </div>
                         <div className={clsx(styles.detailBottom)}>
                             <p className={clsx(styles.author)}>
                                 Author
-                                {itemManga.length !== 0 &&
-                                    <span>{itemManga[0].author_alias ?? itemManga[0].author_name}</span>
-                                }
+                                <span>{itemManga[0].author}</span>
                             </p>
                             <p className={clsx(styles.country)}>
                                 Country
-                                <span>Coming soon</span>
+                                <span>{itemManga[0].country}</span>
                             </p>
                             <p className={clsx(styles.status)}>
                                 Status
-                                {itemManga.length !== 0 &&
-                                    <span>
-                                        <DotCircleIcon
-                                            className={clsx(styles.statusDot, {
-                                                [styles.comingSoon]: itemManga[0].status_id === 2,
-                                                [styles.drop]: !itemManga[0].status_id,
-                                                [styles.complete]: itemManga[0].status_id === 3,
-                                                [styles.releasing]: itemManga[0].status_id === 1,
-                                            })}
-                                        />
-                                        {itemManga[0].status_name}
-                                    </span>
-                                }
+                                <span>
+                                    <DotCircleIcon
+                                        className={clsx(styles.statusDot, {
+                                            [styles.comingSoon]: status == "coming",
+                                            [styles.drop]: status == "drop",
+                                            [styles.complete]: status == "complete",
+                                            [styles.releasing]: status == "releasing",
+                                        })}
+                                    />
+                                    {status}
+                                </span>
                             </p>
                             <div className={clsx(styles.evaluate)}>
                                 <div className={clsx(styles.satisfied)}>
                                     <FaceSmileIcon className={clsx(styles.icon)} />
                                     <p>
-                                        {getSatisfied}%
+                                        {itemManga[0].satisfied}%
                                     </p>
                                 </div>
                                 <div className={clsx(styles.favorite)}>
                                     <HeartIcon className={clsx(styles.icon)} />
-                                    <p>{itemManga.length !== 0 && itemManga[0].favorite_count}</p>
+                                    <p>
+                                        {itemManga[0].favorite}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -334,7 +318,8 @@ function MangaDetail() {
                                 English
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].name_english || "Not found :("}
+                                {/* My Senpai is Annoying */}
+                                {itemManga[0].nameEng}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
@@ -343,7 +328,7 @@ function MangaDetail() {
                             </p>
                             <p className={clsx(styles.value)}>
                                 {/* 先輩がうざい後輩の話 */}
-                                {itemManga.length !== 0 && itemManga[0].name_japan || "Not found :("}
+                                {itemManga[0].nameJapan}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
@@ -351,15 +336,17 @@ function MangaDetail() {
                                 romanji
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].name_romanji || "Not found :("}
+                                {/* Senpai ga Uzai Kouhai no Hanashi */}
+                                {itemManga[0].nameRomanji}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
                             <p className={clsx(styles.key)}>
-                                views
+                                popular
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].view_count}
+                                {/* 12,821 */}
+                                {itemManga[0].satisfied}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
@@ -367,7 +354,8 @@ function MangaDetail() {
                                 favorite
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].favorite_count}
+                                {/* 298 */}
+                                {itemManga[0].favorite}
                             </p>
                         </div>
                     </div>
@@ -375,32 +363,33 @@ function MangaDetail() {
                         <Heading>Danh sách chương</Heading>
                         <div className={clsx(styles.top)}>
                             <label htmlFor="">
-                                Languages:
+                                Sources:
                             </label>
-                            <div className={clsx(styles.sourcesLanguages)}
+                            <div className={clsx(styles.sources)}
                                 onClick={() => {
-                                    setToggleMenuLanguages(!toggleMenuLanguages);
+                                    setToggleMenuSource(!toggleMenuSource);
                                 }}
                             >
-                                <p>{selectLanguages}</p>
+                                <p>{selectSource}</p>
                                 <CaretDownIcon className={clsx(styles.icon)} />
                                 {
-                                    toggleMenuLanguages &&
+                                    toggleMenuSource &&
                                     <ul className={clsx(styles.menu)}>
-                                        {dataLanguages.length !== 0 && dataLanguages.map((item, index) => {
+                                        {sources.map((item, index) => {
                                             return (
                                                 <li className={clsx(styles.item)} key={index}
                                                     onClick={() => {
-                                                        setSelectLanguages(item.languages);
-                                                        setSelectChapter("1 - 10");
+                                                        setSelectSource(item.sources)
                                                     }}
                                                 >
-                                                    {item.languages}
-                                                    {selectLanguages == item.languages && <CircleCheckIcon className={clsx(styles.iconSelect)} />}
+                                                    {item.sources}
+                                                    {
+                                                        selectSource == item.sources &&
+                                                        <CircleCheckIcon className={clsx(styles.iconSelect)} />
+                                                    }
                                                 </li>
                                             )
                                         })}
-
                                     </ul>
                                 }
                             </div>
@@ -410,52 +399,69 @@ function MangaDetail() {
                                 }}
                             >
                                 <p>{selectChapter}</p>
+                                {/* <input type="" name="" value="he" /> */}
                                 <CaretDownIcon className={clsx(styles.icon)} />
                                 {
                                     toggleMenuChapter &&
                                     <ul className={clsx(styles.menu)}>
-                                        {getListChapter.map((item, index) => {
-                                            console.log("item", item)
+                                        {/* {chapter.map((item, index) => {
                                             return (
                                                 <li className={clsx(styles.item)} key={index}
                                                     onClick={() => {
-                                                        setSelectChapter(item)
+                                                        setSelectChapter(item.chapter)
                                                     }}
                                                 >
-                                                    {item}
-                                                    {selectChapter === item && <CircleCheckIcon className={clsx(styles.iconSelect)} />}
+                                                    {item.chapter}
+                                                    {
+                                                        selectChapter == item.chapter &&
+                                                        <CircleCheckIcon className={clsx(styles.iconSelect)} />
+                                                    }
                                                 </li>
                                             )
-                                        })}
+                                        })} */}
+                                        {itemManga[0].chapter.map((item, index) => (
+                                            <li className={clsx(styles.item)} key={index}
+                                                onClick={() => {
+                                                    setSelectChapter(item.id)
+                                                }}
+                                            >
+                                                {item.id}
+                                                {
+                                                    selectChapter == item.chapter &&
+                                                    <CircleCheckIcon className={clsx(styles.iconSelect)} />
+                                                }
+                                            </li>
+                                        ))}
                                     </ul>
                                 }
                             </div>
                             <div className={clsx(styles.languages)}>
-                                {selectLanguages}
+                                EN
                             </div>
                         </div>
                         <div className={clsx(styles.chapterContent)}>
-                            {
-                                dataChapter.map((item, index) => {
-                                    // console.log("selectChapter", selectChapter);
-                                    // handle chapter 
-                                    // console.log("item chapter", item);
-                                    let handleChapter = selectChapter.split(" ");
-                                    let start = parseInt(handleChapter[0]);
-                                    let end = parseInt(handleChapter[handleChapter.length - 1]);
-                                    // console.log("handleChapter", handleChapter)
-                                    let getChapterIndex = parseInt(item.chapter_index);
+                            {/* {
+                                chapter.map((item, index) => {
+                                    // if (item.chapter >= selectChapter.split(" ")[0] && item.chapter <= selectChapter.split(" ")[2]) {
+                                    // }                                                                
+                                    return (
+                                        <div className={clsx(styles.item)} key={index}>
+                                            {item.chapter} <span>{item.title}</span>
+                                        </div>
+                                    )
 
-                                    if (getChapterIndex >= start && getChapterIndex <= end && item.languages === selectLanguages) {
-                                        return (
-                                            <Link className={clsx(styles.item)} key={index} 
-                                                to={`/manga/read/${item.keyword}/${item.id}`}
-                                                onClick={() => setDataItemChapter(item)}
-                                            >
-                                                <span>{item.name}</span>
-                                            </Link>
-                                        )
-                                    }
+
+                                })
+                            } */}
+                            {
+                                itemManga[0].chapter.map((item, index) => {
+                                    // if (item.chapter >= selectChapter.split(" ")[0] && item.chapter <= selectChapter.split(" ")[2]) {
+                                    // }                                                                
+                                    return (
+                                        <div className={clsx(styles.item)} key={index}>
+                                            {item.id} <span>{item.title}</span>
+                                        </div>
+                                    )
                                 })
                             }
                         </div>
@@ -473,12 +479,12 @@ function MangaDetail() {
                             )
                         })} */}
                         {
-                            // itemManga[0].character.map((item, index) => (
-                            //     <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
-                            //         setShowDetailChar(index)
-                            //         setToggleDetailChar(!toggleDetailChar)
-                            //     }} />
-                            // ))
+                            itemManga[0].character.map((item, index) => (
+                                <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
+                                    setShowDetailChar(index)
+                                    setToggleDetailChar(!toggleDetailChar)
+                                }} />
+                            ))
                         }
                     </div>
                 </div>
@@ -511,7 +517,7 @@ function MangaDetail() {
 
                 <div className={clsx(styles.comment)}>
                     <Heading primary>Bình luận</Heading>
-                    <Comments currentUserId={1}/>
+                    <Comments />
                 </div>
             </div>
 

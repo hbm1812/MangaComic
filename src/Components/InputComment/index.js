@@ -27,6 +27,7 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
         e.preventDefault();
         handleSubmit(text, parentId ?? null, e, currentId, image ?? null)
         // console.log("submit", text)
+        image && URL.revokeObjectURL(image.preview)
         setText("");
         setImage("");
         setShowEmoji(false);
@@ -84,7 +85,9 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
                         <label style={{ display: "inline-block" }}>
                             <AddImageIcon
                                 className={clsx(styles.imageIcon)}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    // image && URL.revokeObjectURL(image.preview);
+                                }}
                             />
                         </label>                        
                     </div>

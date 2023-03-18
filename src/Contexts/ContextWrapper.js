@@ -12,6 +12,7 @@ function ContextWrapper(props) {
     const [sendDesc, setSendDesc] = useState("");
     const [newsDetail, setNewsDetail] = useState({});
     const [fetchApiComment, setFetchApiComment] = useState(false);
+    const [dataItemChapter, setDataItemChapter] = useState({});
 
     // combobox
     const [nameCombobox, setNameCombobox] = useState("");    
@@ -38,6 +39,8 @@ function ContextWrapper(props) {
                 setNewsDetail,
                 fetchApiComment,
                 setFetchApiComment,
+                dataItemChapter,
+                setDataItemChapter,
             }}>
             {props.children}
         </GlobalContext.Provider>

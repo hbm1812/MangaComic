@@ -30,6 +30,10 @@ const GlobalContext = React.createContext({
     fetchApiComment: false,
     setFetchApiComment: () => {},
 
+    // dataChapter manga 
+    dataItemChapter: {},
+    setDataItemChapter: () => {},
+
 })
 
 export default GlobalContext;
