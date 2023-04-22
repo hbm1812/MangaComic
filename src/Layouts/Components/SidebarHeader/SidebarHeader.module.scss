@@ -7,7 +7,12 @@
     right: -302px;
     bottom: 0;
     z-index: 1000;
-    box-shadow: 0 0 10px #999;
+    box-shadow: 0 0 10px #999999;
+}
+
+.wrapper.show {
+    // right: -302px;
+    right: 0;
 }
 
 // header

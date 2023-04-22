@@ -11,6 +11,7 @@ import isEmpty from "validator/lib/isEmpty";
 import Image from "../../Components/Image";
 import FormInput from "../../Components/FormInput";
 
+import axios from "axios";
 
 function Register() {
     // router dom
@@ -66,16 +67,64 @@ function Register() {
         }
     ];
 
+    const onChangeInput = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value })
+        // console.log({ ...values, [e.target.name]: e.target.value })
+        // console.log("name Base")
+        // console.log({...values, [e.target.name]: "hello"})
+    }
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
-        console.log(data);
-        console.log(Object.fromEntries(data.entries()))
-    }
 
-    const onChangeInput = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value })
+        // console.log("image", image);
+
+        data.append("name", "");
+        data.append("username", values.username);
+        data.append("email", values.email);
+        data.append("password", values.password);
+        data.append("phone", "");
+        data.append("role_id", 2);
+        data.append("avatar", "")        
+
+
+        let checkBool = true;
+        // listUsers.find((item) => {
+        //     if (item.username === values.username) {
+        //         console.log("tài khoản đã tồn tại");
+        //         checkBool = false;
+        //         handleCloseModal();
+        //         handleToastNotify();
+        //         setTypeNotify("error");
+        //     }
+        // })
+
+        if (checkBool) {
+            axios({
+                method: "POST",
+                url: "http://localhost/manga-comic-be/api/users/register.php",
+                data: data,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(() => {
+                    console.log("success");
+                    checkBool = false;
+                    // handleCloseModal();
+                    // handleToastNotify();
+                    // setTypeNotify("success");
+                    // resetValueCreate();
+                })
+                .catch(() => {
+                    console.log("error");
+                })
+        }
+
+        // console.log(data);
+        // console.log(Object.fromEntries(data.entries()))
+
+        // console.log("hi");
+        // console.log(values.username);
     }
 
 

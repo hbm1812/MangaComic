@@ -260,29 +260,17 @@
 .oneColumn {
     width: 100%;
     min-width: 300px;
-
-    .itemPrimary {
-        height: 400px;
-    }
 }
 
 .twoColumn {
     width: 50%;
     min-width: 210px;
 
-    .itemPrimary {
-        height: 250px;
-    }
-
 }
 
 .threeColumn {
     width: 33.33%;
     min-width: 210px;
-
-    .itemPrimary {
-        height: 200px;
-    }
 }
 
 .fourColumn {
@@ -290,7 +278,6 @@
     min-width: 210px;
     
     .itemPrimary {
-        height: 200px;
         border-top-left-radius: 35px;
         border-top-right-radius: 35px;
 
@@ -309,20 +296,11 @@
     width: 20%;
     min-width: 210px;
 
-    .itemPrimary {
-        height: 270px;
-    }
-
 }
 
 .sixColumn {
     width: 16.66%;
     // min-width: 210px;
-
-    .itemPrimary {
-        height: 300px;
-    }
-
 }
 
 // set mode

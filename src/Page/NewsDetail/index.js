@@ -15,7 +15,7 @@ export default function NewsDetail() {
     const navigate = useNavigate();
     const params = useParams();
     // console.log("param", params);
-    const { newsDetail, setNewsDetail } = useContext(GlobalContext);
+    const { newsDetail, setNewsDetail, dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
     // console.log("newdt", newsDetail)
     const [category, setCategory] = useState(newsDetail.key_category ?? "");
 
@@ -75,7 +75,11 @@ export default function NewsDetail() {
 
                         <Heading>Bình luận</Heading>
                         {/* currentUserId sau truyền id ng dùng khi đăng nhập */}
-                        <Comments currentUserId={1} />
+                        {dataUserLogin ?
+                            <Comments currentUserId={dataUserLogin.id} />
+                            :
+                            <Comments />                            
+                        }
 
                     </div>
                 </div>

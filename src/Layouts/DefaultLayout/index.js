@@ -6,15 +6,24 @@ import Header from '../Components/Header';
 import SidebarHeader from '../Components/SidebarHeader';
 
 import bg from '../../assets/images/Base/background.png';
+import { useContext } from 'react';
+import GlobalContext from '../../Contexts/GlobalContext';
 
 function DefaultLayout({ children }) {
+    const { toggleSidebar, setToggleSidebar } = useContext(GlobalContext);
+
+    const handleCloseSidebar = () => {
+        setToggleSidebar(false);
+    }
     return (
         <div className={clsx(styles.wrapper)}>
             <Header />
             {/* <Sidebar/> */}
             <SidebarHeader />
-            <section className={clsx(styles.container)}>                                            
-                {children}                    
+            <section className={clsx(styles.container)}
+                onClick={() => handleCloseSidebar()}
+            >
+                {children}
             </section>
             <div className={clsx(styles.overlay)}
                 style={{
@@ -25,7 +34,7 @@ function DefaultLayout({ children }) {
                     backgroundPosition: "center",
                 }}
             >
-                
+
             </div>
         </div>
     );

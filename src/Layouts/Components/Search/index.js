@@ -7,6 +7,7 @@ import { SearchIcon, CircleXmarkIcon, SpinnerIcon } from '../../../Components/Ic
 import useDebounce from "../../../Hooks/useDebounce";
 import ItemMangaSearch from "../../../Components/ItemMangaSearch";
 import * as services from "../../../services/searchServices";
+import axios from 'axios';
 
 function Search() {
     const [searchValue, setSearchValue] = useState('');
@@ -47,16 +48,31 @@ function Search() {
             return;
         }
 
-        const fetchApi = async () => {
-            setLoading(true);
+        console.log("hello");
 
-            const result = await services.search(debounced);
-            setSearchResult(result);
+        setLoading(true);
+        axios.get(`http://localhost/manga-comic-be/api/stories/findStoriesWithNameLess.php?name=${encodeURIComponent(debounced)}`)
+            .then((res) => {
+                // console.log("data", res.data)
+                setSearchResult(res.data)
+                setLoading(false);
+            })
 
-            setLoading(false);
-        }
+            .catch(() => {
+                console.log("error")
+                setLoading(false);                
+            })
+
+        // const fetchApi = async () => {
+        //     setLoading(true);
+
+        //     const result = await services.search(debounced);
+        //     setSearchResult(result);
+
+        //     setLoading(false);
+        // }
         
-        fetchApi();
+        // fetchApi();
         // using axios
         // const fetchApi = async () => {
         //     try {
@@ -72,10 +88,8 @@ function Search() {
         //         setLoading(false);
         //     }
         // }
-        // fetchApi();
-
-
-
+        // fetchApi();     
+        
         // fetch api
         // fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
         //     .then(res => res.json())

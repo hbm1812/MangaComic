@@ -1,8 +1,8 @@
-// layout
+// layouts
 import OnlyBackground from "../Layouts/OnlyBackground";
 import AdminLayout from "../Layouts/AdminLayout";
 
-// page
+// pages
 import Home from "../Page/Home";
 import News from "../Page/News";
 import NewsDetail from "../Page/NewsDetail";
@@ -14,8 +14,11 @@ import Error404 from "../Page/Error404";
 import Test from "../Page/Test";
 import Register from "../Page/Register";
 
+// pages admin
 import Dashboard from "../Page/Admin/Dashboard";
 import Table from "../Page/Admin/Table";
+import Users from "../Page/Admin/Table/Users";
+import Personal from "../Page/Admin/Table/Personal";
 import Calendar from "../Page/Admin/Calendar";
 
 
@@ -36,6 +39,8 @@ const publicRoutes = [
     // auth 
     { path: "/login", component: Login, layout: null },
     { path: "/register", component: Register, layout: null },
+    // { path: "/login", component: Login, layout: OnlyBackground },
+    // { path: "/register", component: Register, layout: OnlyBackground },
 
     // config news 
     { path: "/news", component: News },
@@ -63,6 +68,8 @@ const publicRoutes = [
     // admin
     { path: "/admin", component: Dashboard, layout: AdminLayout },
     { path: "/admin/table", component: Table, layout: AdminLayout },
+    { path: "/admin/users", component: Users, layout: AdminLayout },
+    { path: "/admin/Personal", component: Personal, layout: AdminLayout },
     { path: "/admin/calendar", component: Calendar, layout: AdminLayout },
 
     // test

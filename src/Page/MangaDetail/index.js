@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import Heading from "../../Components/Heading";
 import Character from "../../Components/Character";
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 // test img
 import Lena86 from "../../assets/images/characters/lena86.png";
@@ -122,8 +122,8 @@ function MangaDetail() {
     const params = useParams();
     // console.log("params", params)
     const navigate = useNavigate();
-    const {dataItemChapter, setDataItemChapter} = useContext(GlobalContext);
-    console.log("dataItemChapter", dataItemChapter)
+    const { dataItemChapter, setDataItemChapter, dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
+    // console.log("dataItemChapter", dataItemChapter)
     // sources languages
     const [selectLanguages, setSelectLanguages] = useState("");
     const [toggleMenuLanguages, setToggleMenuLanguages] = useState(false);
@@ -140,6 +140,15 @@ function MangaDetail() {
     const [dataChapter, setDataChapter] = useState([]);
     const [dataLanguages, setDataLanguages] = useState([]);
 
+    // login user 
+    const LocalUserLogin = JSON.parse(localStorage.getItem("DataUser")) ?? null;
+    console.log("LocalUserLogin", LocalUserLogin)
+
+    // user active 
+    const [activeView, setActiveView] = useState(false);
+    const [listActiveView, setListActiveView] = useState([]);
+
+
     // findStory
     useEffect(() => {
         axios.get(`http://localhost/manga-comic-be/api/stories/findStory.php?keyword=${params.nameManga}`)
@@ -152,7 +161,7 @@ function MangaDetail() {
             .catch(() => {
                 console.log("error")
             })
-    }, []);
+    }, [params.nameManga]);
 
     // get all category in story
     useEffect(() => {
@@ -244,6 +253,48 @@ function MangaDetail() {
             })
     }, []);
     // console.log("dataLanguages", dataLanguages)
+
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/getViews.php`)
+            .then((res) => {
+                setListActiveView(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [activeView])
+
+    const filterCountView = listActiveView.filter(item => item.stories_id)
+    console.log("filterCountView", filterCountView)
+
+    const handleAddViews = () => {
+        if (LocalUserLogin) {
+            const data = new FormData();
+            console.log("data", data)
+    
+            data.append("user_id", LocalUserLogin.id);
+            data.append("stories_id", params.idManga);
+    
+            axios({
+                method: "POST",
+                url: "http://localhost/manga-comic-be/api/stories/addView.php",
+                data: data,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(() => {
+                    console.log("success");
+                    setActiveView(!activeView);
+                })
+                .catch(() => {
+                    console.log("error");
+                })
+    
+            console.log("data:", data);
+            console.log("data entry:", Object.fromEntries(data.entries()))
+        }
+    }
+
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.banner)}
@@ -309,18 +360,24 @@ function MangaDetail() {
                                     </span>
                                 }
                             </p>
-                            <div className={clsx(styles.evaluate)}>
-                                <div className={clsx(styles.satisfied)}>
-                                    <FaceSmileIcon className={clsx(styles.icon)} />
-                                    <p>
-                                        {getSatisfied}%
-                                    </p>
+                            {itemManga.length !== 0 &&
+                                <div className={clsx(styles.evaluate)}>
+                                    <div className={clsx(styles.satisfied)}>
+                                        <FaceSmileIcon className={clsx(styles.icon)} />
+                                        <p>
+                                            {getSatisfied}%
+                                        </p>
+                                    </div>
+                                    <div className={clsx(styles.favorite)}>
+                                        <HeartIcon className={clsx(styles.icon, {
+                                            // [styles.active]: true
+                                        })}
+                                            onClick={handleAddViews}
+                                        />
+                                        <p>{filterCountView.length ?? itemManga[0].favorite_count}</p>
+                                    </div>
                                 </div>
-                                <div className={clsx(styles.favorite)}>
-                                    <HeartIcon className={clsx(styles.icon)} />
-                                    <p>{itemManga.length !== 0 && itemManga[0].favorite_count}</p>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -359,7 +416,7 @@ function MangaDetail() {
                                 views
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].view_count}
+                                {filterCountView.length ?? itemManga[0].view_count}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
@@ -448,9 +505,12 @@ function MangaDetail() {
 
                                     if (getChapterIndex >= start && getChapterIndex <= end && item.languages === selectLanguages) {
                                         return (
-                                            <Link className={clsx(styles.item)} key={index} 
+                                            <Link className={clsx(styles.item)} key={index}
                                                 to={`/manga/read/${item.keyword}/${item.id}`}
-                                                onClick={() => setDataItemChapter(item)}
+                                                onClick={() => {
+                                                    setDataItemChapter(item)
+                                                    handleAddViews()
+                                                }}
                                             >
                                                 <span>{item.name}</span>
                                             </Link>
@@ -511,7 +571,11 @@ function MangaDetail() {
 
                 <div className={clsx(styles.comment)}>
                     <Heading primary>Bình luận</Heading>
-                    <Comments currentUserId={1}/>
+                    {dataUserLogin ?
+                        <Comments currentUserId={dataUserLogin.id} />
+                        :
+                        <Comments />
+                    }
                 </div>
             </div>
 

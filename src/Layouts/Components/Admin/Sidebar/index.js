@@ -2,7 +2,7 @@ import clsx from "clsx";
 import styles from "./Sidebar.module.scss";
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { XmarkIcon } from "../../../../Components/Icon";
+import { NewsPaperIcon, TableCellsLargeIcon, UserIcon, XmarkIcon } from "../../../../Components/Icon";
 
 const dataLink = [
     {
@@ -11,17 +11,17 @@ const dataLink = [
             {
                 to: "table",
                 name: "Table",
-                icon: <XmarkIcon />
+                icon: <TableCellsLargeIcon />
             },
             {
-                to: "table",
-                name: "orders",
-                icon: <XmarkIcon />
+                to: "users",
+                name: "Users",
+                icon: <UserIcon />
             },
             {
-                to: "table",
-                name: "orders",
-                icon: <XmarkIcon />
+                to: "Personal",
+                name: "Personal",
+                icon: <NewsPaperIcon />
             },
         ]
     },
@@ -189,10 +189,11 @@ const dataLink = [
 
 function Sidebar() {
     const [activeMenu, setActiveMenu] = useState(true);
+    
     return (
         <div className={clsx(styles.wrapper)}>
             <div className={clsx(styles.head)}>
-                <Link to="/admin" className={clsx(styles.linkDashboard)}>
+                <Link to="/" className={clsx(styles.linkDashboard)}>
                     <div className={clsx(styles.imgWrap)}>
                         <img src="https://marketplace.magento.com/media/catalog/product/4/a/4acb_rsz_admin-logo_1.png" alt="" />
                     </div>

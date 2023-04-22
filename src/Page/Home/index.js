@@ -1,8 +1,9 @@
 import clsx from "clsx";
 import styles from "./Home.module.scss";
 import Heading from "../../Components/Heading";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Loading from "../../Components/Loading";
 
 // base component
 import Button from "../../Components/Button/index";
@@ -26,147 +27,7 @@ import axios from "axios";
 import { WindowScrollTop } from "../../util";
 
 import Image from "../../Components/Image";
-
-const dataSlider = [
-    {
-        id: 1,
-        chapter: 114,
-        name: "Thám tử Conan",
-        desc: "Mở đầu câu truyện, cậu học sinh trung học 16 tuổi Shinichi Kudo bị biến thành cậu bé Conan Edogawa. Shinichi trong phần đầu của Thám tử lừng danh Conan được miêu tả là một thám tử học đường. Trong một lần đi chơi công viên Miền Nhiệt đới với cô bạn từ thuở nhỏ (cũng là bạn gái) Ran Mori , cậu bị dính vào vụ án một hành khách trên Chuyến tàu tốc hành trong công viên, Kishida , bị giết trong một vụ án cắt đầu rùng rợn. Cậu đã làm sáng tỏ vụ án và trên đường về nhà, chứng kiến một vụ làm ăn mờ ám của những người đàn ông mặc toàn đồ đen. Kudo bị phát hiện, bị đánh ngất sau đó những người đàn ông áo đen đã cho cậu uống một thứ thuốc độc chưa qua thử nghiệm là Apotoxin-4869 (APTX4869) với mục đích thủ tiêu cậu. Tuy nhiên chất độc đã không giết chết Kudo. Khi tỉnh lại, cậu bàng hoàng nhận thấy thân thể mình đã bị teo nhỏ trong hình dạng của một cậu học sinh tiểu học....",
-        src: "https://kyoto-manga-proxy-5niz.onrender.com/proxy?url=http://www.nettruyenme.com&src=https://st.ntcdntempv3.com/data/comics/30/tham-tu-conan.jpg",
-        listCategory: [
-            {
-                key: "action",
-                title: "Action",
-            },
-            {
-                key: "adventure",
-                title: "Adventure",
-            },
-            {
-                key: "comedy",
-                title: "Comedy",
-            },
-            {
-                key: "romance",
-                title: "Romance",
-            },
-            {
-                key: "drama",
-                title: "Drama",
-            },
-            {
-                key: "mecha",
-                title: "Mecha",
-            }
-        ],
-    },
-    {
-        id: 2,
-        chapter: 999,
-        name: "Thanh gươm diệt quỷ",
-        desc: "Mở đầu câu truyện, cậu học sinh trung học 16 tuổi Shinichi Kudo bị biến thành cậu bé Conan Edogawa. Shinichi trong phần đầu của Thám tử lừng danh Conan được miêu tả là một thám tử học đường. Trong một lần đi chơi công viên Miền Nhiệt đới với cô bạn từ thuở nhỏ (cũng là bạn gái) Ran Mori , cậu bị dính vào vụ án một hành khách trên Chuyến tàu tốc hành trong công viên, Kishida , bị giết trong một vụ án cắt đầu rùng rợn. Cậu đã làm sáng tỏ vụ án và trên đường về nhà, chứng kiến một vụ làm ăn mờ ám của những người đàn ông mặc toàn đồ đen. Kudo bị phát hiện, bị đánh ngất sau đó những người đàn ông áo đen đã cho cậu uống một thứ thuốc độc chưa qua thử nghiệm là Apotoxin-4869 (APTX4869) với mục đích thủ tiêu cậu. Tuy nhiên chất độc đã không giết chết Kudo. Khi tỉnh lại, cậu bàng hoàng nhận thấy thân thể mình đã bị teo nhỏ trong hình dạng của một cậu học sinh tiểu học....",
-        src: "https://kyoto-manga-proxy-5niz.onrender.com/proxy?url=http://www.nettruyenme.com&src=https://st.ntcdntempv3.com/data/comics/235/thanh-guom-diet-quy.jpg",
-        listCategory: [
-            {
-                key: "action",
-                title: "Action",
-            },
-            {
-                key: "adventure",
-                title: "Adventure",
-            },
-            {
-                key: "drama",
-                title: "Drama",
-            },
-            {
-                key: "mecha",
-                title: "Mecha",
-            }
-        ],
-    },
-    {
-        id: 3,
-        chapter: 100,
-        name: "Thất nghiệp chuyển sinh",
-        desc: "Mở đầu câu truyện, cậu học sinh trung học 16 tuổi Shinichi Kudo bị biến thành cậu bé Conan Edogawa. Shinichi trong phần đầu của Thám tử lừng danh Conan được miêu tả là một thám tử học đường. Trong một lần đi chơi công viên Miền Nhiệt đới với cô bạn từ thuở nhỏ (cũng là bạn gái) Ran Mori , cậu bị dính vào vụ án một hành khách trên Chuyến tàu tốc hành trong công viên, Kishida , bị giết trong một vụ án cắt đầu rùng rợn. Cậu đã làm sáng tỏ vụ án và trên đường về nhà, chứng kiến một vụ làm ăn mờ ám của những người đàn ông mặc toàn đồ đen. Kudo bị phát hiện, bị đánh ngất sau đó những người đàn ông áo đen đã cho cậu uống một thứ thuốc độc chưa qua thử nghiệm là Apotoxin-4869 (APTX4869) với mục đích thủ tiêu cậu. Tuy nhiên chất độc đã không giết chết Kudo. Khi tỉnh lại, cậu bàng hoàng nhận thấy thân thể mình đã bị teo nhỏ trong hình dạng của một cậu học sinh tiểu học....",
-        src: "https://kyoto-manga-proxy-5niz.onrender.com/proxy?url=http://www.nettruyenme.com&src=https://st.ntcdntempv3.com/data/comics/52/that-nghiep-chuyen-sinh-lam-lai-het-suc.jpg",
-        listCategory: [
-            {
-                key: "comedy",
-                title: "Comedy",
-            },
-            {
-                key: "romance",
-                title: "Romance",
-            },
-            {
-                key: "drama",
-                title: "Drama",
-            },
-            {
-                key: "mecha",
-                title: "Mecha",
-            }
-        ],
-    },
-    {
-        id: 4,
-        chapter: 200,
-        name: "Vương giả",
-        desc: "Mở đầu câu truyện, cậu học sinh trung học 16 tuổi Shinichi Kudo bị biến thành cậu bé Conan Edogawa. Shinichi trong phần đầu của Thám tử lừng danh Conan được miêu tả là một thám tử học đường. Trong một lần đi chơi công viên Miền Nhiệt đới với cô bạn từ thuở nhỏ (cũng là bạn gái) Ran Mori , cậu bị dính vào vụ án một hành khách trên Chuyến tàu tốc hành trong công viên, Kishida , bị giết trong một vụ án cắt đầu rùng rợn. Cậu đã làm sáng tỏ vụ án và trên đường về nhà, chứng kiến một vụ làm ăn mờ ám của những người đàn ông mặc toàn đồ đen. Kudo bị phát hiện, bị đánh ngất sau đó những người đàn ông áo đen đã cho cậu uống một thứ thuốc độc chưa qua thử nghiệm là Apotoxin-4869 (APTX4869) với mục đích thủ tiêu cậu. Tuy nhiên chất độc đã không giết chết Kudo. Khi tỉnh lại, cậu bàng hoàng nhận thấy thân thể mình đã bị teo nhỏ trong hình dạng của một cậu học sinh tiểu học....",
-        src: "https://kyoto-manga-proxy-5niz.onrender.com/proxy?url=http://www.nettruyenme.com&src=https://st.ntcdntempv3.com/data/comics/53/vuong-gia-thien-ha.jpg",
-        listCategory: [
-            {
-                key: "action",
-                title: "Action",
-            },
-            {
-                key: "adventure",
-                title: "Adventure",
-            },
-            {
-                key: "comedy",
-                title: "Comedy",
-            },
-            {
-                key: "romance",
-                title: "Romance",
-            },
-        ],
-    },
-]
-
-const dataRecommend = [
-    {
-        id: 999,
-        chapter: 100,
-        name: "Spy X Family",
-        desc: `Câu chuyện kể về một điệp viên của "Tây Quốc" Westalis (西国ウェスタリス Wesutarisu?) có mật danh là "Hoàng hôn", cố gắng xây dựng một "gia đình kiểu mẫu" nhằm thu thập thông tin tình báo tại nước đối địch, "Đông Quốc" Ostania (東国オスタニア Osutania?)`,
-        src: "https://muagitot.com/images/news/2022/07/07/large/wp7868567_1657152589.jpg",
-        satisfied: 58,
-        favorite: 11102,
-        listCategory: [
-            {
-                key: "comedy",
-                title: "Comedy",
-            },
-            {
-                key: "romance",
-                title: "Romance",
-            },
-            {
-                key: "drama",
-                title: "Drama",
-            },
-            {
-                key: "mecha",
-                title: "Mecha",
-            }
-        ],
-    },
-]
+import GlobalContext from "../../Contexts/GlobalContext";
 
 export default function Home() {
     const [dataManga, setDataManga] = useState([]);
@@ -174,20 +35,28 @@ export default function Home() {
     const [dataMangaHot, setDataMangaHot] = useState([]);
     const [dataCategoryInStory, setDataCategoryInStory] = useState([]);
     const [dataRecommendIndex, setDataRecommendIndex] = useState(-1);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    // data chapter 
     
+
     // console.log("dataRecommendIndex", dataRecommendIndex)
+
     // fetch api manga 
     useEffect(() => {
         axios.get("http://localhost/manga-comic-be/api/stories/read.php")
             .then((res) => {
                 // console.log("data manga", res.data);
                 setDataManga(res.data)
+                setIsLoading(false);
             })
 
             .catch(() => {
                 console.log("error")
             })
     }, []);
+
     const dataMangaComing = dataManga.filter((item) => {
         // console.log("item", item)
         return (
@@ -234,7 +103,7 @@ export default function Home() {
             .then((res) => {
                 setDataNewsLastest(res.data);
 
-                if(dataRecommendIndex === -1) {
+                if (dataRecommendIndex === -1) {
                     setDataRecommendIndex(Math.floor(Math.random() * dataManga.length + 1))
                 }
             })
@@ -245,19 +114,36 @@ export default function Home() {
     }, []);
     var listNewsLastest = dataNewsLastest.slice(0, 8);
 
+    // find chapter
+    // useEffect(() => {
+    //     axios.get(`http://localhost/manga-comic-be/api/stories/getChapter.php?keyword=${params.nameManga}`)
+    //         .then((res) => {
+    //             // setDataMangaItem(res.data);
+    //             // console.log("data chapter", res.data)
+    //             setDataChapter(res.data)
+    //         })
+
+    //         .catch(() => {
+    //             console.log("error")
+    //         })
+    // }, []);
+
 
     return (
-        <Fragment>            
-            {dataMangaHot.length !== 0 &&
-                <div className={clsx(styles.slider)}>
-                    <div className="slide-container">
-                        <Slide>
-                            {dataMangaHot.map((item, index) => {
-                                // console.log("item", item);
-                                let findCategory = dataCategoryInStory.filter((itemCate) => itemCate.story_id === item.id)
-                                // console.log("findCategory", findCategory)
-                                return (
-                                    (
+        <Fragment>
+            {
+                isLoading ?
+                    <Loading />
+                    :
+                    <div className={clsx(styles.slider)}>
+
+                        <div className="slide-container">
+                            <Slide>
+                                {dataMangaHot.map((item, index) => {
+                                    // console.log("item", item);
+                                    let findCategory = dataCategoryInStory.filter((itemCate) => itemCate.story_id === item.id)
+                                    // console.log("findCategory", findCategory)                                
+                                    return (
                                         <div className="each-slide" key={index}>
                                             <div className={clsx(styles.wrapper)}>
                                                 <div className={clsx(styles.item)} key={index}>
@@ -274,7 +160,7 @@ export default function Home() {
                                                             </h5>
                                                             <ul className={clsx(styles.genres)}>
                                                                 {findCategory.map((itemCategory, index) => (
-                                                                    <Link to={`/truyen-tranh/${itemCategory.keyword}`} key={index}
+                                                                    <Link to={`/manga/${itemCategory.keyword}`} key={index}
                                                                         onClick={() => {
                                                                             WindowScrollTop()
                                                                         }}
@@ -285,7 +171,9 @@ export default function Home() {
                                                             </ul>
                                                             <div className={clsx(styles.userActive)}>
                                                                 <Button primary medium scale>Đọc ngay</Button>
-                                                                <Button outline medium scale>Chi tiết</Button>
+                                                                <Button primary medium scale
+                                                                    to={`/manga/detail/${item.keyword}/${item.id}`}
+                                                                >Chi tiết</Button>
                                                             </div>
                                                         </div>
                                                         <div className={clsx(styles.imageWrap)}>
@@ -302,11 +190,11 @@ export default function Home() {
                                             </div>
                                         </div>
                                     )
-                                )
-                            })}
-                        </Slide>
+                                })}
+                            </Slide>
+                        </div>
+
                     </div>
-                </div>
             }
             {/* content */}
             <div className={clsx(styles.content)}>
@@ -318,7 +206,7 @@ export default function Home() {
                         {dataManga.map((item, index) => {
                             // console.log("item detail", item)
                             return (
-                                <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`}/>
+                                <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                             )
                         })}
                     </div>
@@ -377,9 +265,11 @@ export default function Home() {
                             <div className={clsx(styles.banner)}>
                                 <img src={item.background} alt="" />
                                 <div className={clsx(styles.overlay)}>
-                                    <a href="" className={clsx(styles.link)}>
+                                    <Link to={`/manga/detail/${item.keyword}/${item.id}`} className={clsx(styles.link)}
+                                        onClick={() => WindowScrollTop()}
+                                    >
                                         <PlayIcon className={clsx(styles.icon)} />
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
 
@@ -404,7 +294,7 @@ export default function Home() {
                                     </div>
                                     <ul className={clsx(styles.genres)}>
                                         {findCategory.map((itemCategory, index) => (
-                                            <Link to={`/truyen-tranh/${itemCategory.keyword}`} key={index}
+                                            <Link to={`/manga/${itemCategory.keyword}`} key={index}
                                                 onClick={() => {
                                                     WindowScrollTop();
                                                 }}
@@ -426,7 +316,7 @@ export default function Home() {
 
                 {dataMangaComing &&
                     <Fragment>
-                        <Heading primary iconRight={<HeadingRightIcon />} to="/anime">
+                        <Heading primary iconRight={<HeadingRightIcon />}>
                             Coming Soon
                         </Heading>
                         <div className={clsx(styles.wrapper)}>
@@ -439,20 +329,23 @@ export default function Home() {
                     </Fragment>
                 }
 
-                <Heading primary iconRight={<HeadingRightIcon />} to="/anime">
-                    All Manga
-                </Heading>
-                <div className={clsx(styles.wrapper)}>
-                    {dataManga.map((item, index) => {
-                        return (
-                            <ItemManga setColumn={6} data={item} key={index} />
-                        )
-                    })}
-                </div>
-
-                <div className={clsx(styles.viewmore)}>
-                    <Button medium primary to="/truyen-tranh">Xem thêm</Button>
-                </div>
+                {dataManga &&
+                    <Fragment>
+                        <Heading primary iconRight={<HeadingRightIcon />} to="/manga">
+                            All Manga
+                        </Heading>
+                        <div className={clsx(styles.wrapper)}>
+                            {dataManga.map((item, index) => {
+                                return (
+                                    <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`}/>
+                                )
+                            })}
+                        </div>
+                        <div className={clsx(styles.viewmore)}>
+                            <Button medium primary to="/manga" onClick={() => WindowScrollTop()}>Xem thêm</Button>
+                        </div>
+                    </Fragment>
+                }
             </div>
         </Fragment>
     )

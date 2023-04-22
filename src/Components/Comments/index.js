@@ -36,6 +36,7 @@ function Comments({ currentUserId }) {
     const [checkTypeBtn, setCheckTypeBtn] = useState("");
 
     // console.log("checkTypeBtn" , checkTypeBtn);
+    console.log("currentUserId", currentUserId)
 
     const param = useParams();
     console.log("param", param)    

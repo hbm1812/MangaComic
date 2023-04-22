@@ -3,6 +3,7 @@ import styles from "./ItemManga.module.scss";
 import { Link } from "react-router-dom";
 import { BookOpenIcon } from "../Icon";
 import Button from "../Button";
+import { WindowScrollTop } from "../../util";
 
 function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data = {} }) {
     let Comp = "div";
@@ -79,7 +80,9 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
 
     return (
         <Comp className={classesWrapper} {...props}>
-            <div className={clsx(styles.itemPrimary)}>
+            <div className={clsx(styles.itemPrimary)}
+                onClick={() => WindowScrollTop()}
+            >
                 <img src={data.thumbnail || "https://s199.imacdn.com/tt24/2020/03/27/ee63facad9f0518a_442115a9843e7858_255011585324379345957.jpg"} alt="" referrerPolicy="no-referrer" />
                 <div className={clsx(styles.info)}>
                     <h3 className={clsx(styles.infoName)}>

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import styles from "./InputComment.module.scss";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Button from "../Button";
 import { EmojiIcon, AddImageIcon, XmarkIcon, DeleteTrashIcon, EditPenSquareIcon } from "../Icon";
 import Picker from "@emoji-mart/react";
@@ -8,10 +8,11 @@ import DataEmoji from "@emoji-mart/data";
 import Heading from "../Heading";
 import Modal from "../Modal";
 import FormInput from "../FormInput";
+import GlobalContext from "../../Contexts/GlobalContext";
 
 function InputComment({ handleSubmit, parentId, close, currentId, clone, resetImage }) {
     // console.log("inp parrent id", parentId);
-
+    const { dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
     const [text, setText] = useState("");
     const [showEmoji, setShowEmoji] = useState(false);
     // handle image
@@ -25,6 +26,9 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
 
     const onSubmit = (e) => {
         e.preventDefault();
+        if (!dataUserLogin) {
+            alert("bạn phải đăng nhập mới có thể bình luận");
+        }
         handleSubmit(text, parentId ?? null, e, currentId, image ?? null)
         // console.log("submit", text)
         image && URL.revokeObjectURL(image.preview)

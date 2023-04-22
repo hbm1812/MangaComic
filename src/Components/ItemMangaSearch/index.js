@@ -15,21 +15,22 @@ function ItemMangaSearch({ data, onClick }) {
         onClick
     };
 
+    // console.log("data", data)
     return (
         // sau thay thành link động
-        <div className={clsx(styles.sreachResultItem)} {...props}><Link to={`/truyen-tranh-ct/1`}>
+        <div className={clsx(styles.sreachResultItem)} {...props}><Link to={`/manga/detail/${data.keyword}/${data.id}`}>
             <div className={clsx(styles.sreachResultItemImgBox)}>
                 <Image
-                    src={data.avatar}
-                    alt={data.avatar}
+                    src={data.background ?? data.thumbnail}
+                    // alt={data.thumbnail}
                 />
                 <span className={clsx(styles.sreachResultItemTime)}>
-                    Chapter {data.followers_count}
+                    Chapter {data.chapter_lastest}
                 </span>
             </div>
             <div className={clsx(styles.sreachResultItemDesc)}>
-                <h4 className={clsx(styles.sreachResultItemName)}>{data.full_name}</h4>
-                <h5 className={clsx(styles.sreachResultItemView)}>{data.likes_count || "126.000"} lượt xem</h5>
+                <h4 className={clsx(styles.sreachResultItemName)}>{data.name}</h4>
+                <h5 className={clsx(styles.sreachResultItemView)}>{data.view_count} lượt xem</h5>
             </div>
         </Link></div>
     );

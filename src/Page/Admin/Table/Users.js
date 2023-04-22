@@ -1,16 +1,18 @@
 import clsx from "clsx";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import Button from "../../../Components/Button";
 import Modal from "../../../Components/Modal";
-import styles from "./Dashboard.module.scss";
+import styles from "./Table.module.scss";
 import FormInput from "../../../Components/FormInput";
 import Heading from "../../../Components/Heading";
 import { CircleCheckIcon, DangerIcon, PlusIcon, WarningIcon } from "../../../Components/Icon";
 import axios from "axios";
 
 import Toastify from "../../../Components/Toastify";
+import GlobalContext from "../../../Contexts/GlobalContext";
 
-function Dashboard() {
+function Users() {
+    const { nameCombobox, setNameCombobox } = useContext(GlobalContext)
     const [openModalCreateUser, setOpenModalCreateUser] = useState(false);
     const [openModalUpdateUser, setOpenModalUpdateUser] = useState(false);
     const [openModalViewUser, setOpenModalViewUser] = useState(false);
@@ -19,14 +21,24 @@ function Dashboard() {
     const [dataUserView, setDataUserView] = useState({});
     const [dataDelete, setDataDelete] = useState({});
 
+    const [image, setImage] = useState("");
+
+    // roles
+    const [showDataCombobox, setShowDataCombobox] = useState(false);
     // render table
     const [listUsers, setListUsers] = useState([]);
+    const [listRoles, setListRoles] = useState([]);
     const [values, setValues] = useState({
         username: "",
-        fullName: "",
+        name: "",
         email: "",
         password: "",
-        role: "",
+        phone: "",
+        role_id: "",
+        role_name: "",
+        create_at: "",
+        update_at: "",
+        avatar: "",
     });
 
     const inputs = [
@@ -51,6 +63,16 @@ function Dashboard() {
             required: true
         },
         {
+            id: 3,
+            name: "name",
+            type: "text",
+            placeholder: "Name",
+            label: "Name",
+            errorMessage: "Vui lòng nhập tên 3-20 ký tự",
+            pattern: "[A-Za-z0-9_]{3,20}",
+            required: true
+        },
+        {
             id: 4,
             name: "password",
             type: "password",
@@ -62,22 +84,40 @@ function Dashboard() {
         },
         {
             id: 5,
-            name: "role",
+            name: "role_name",
             type: "text",
             placeholder: "Role",
             label: "Role",
-            // errorMessage: "Vui lòng chọn role hợp lệ",
-            // pattern: "[A-Za-z0-9_]{3,15}",
-            // required: true
+            combobox: true.toString()
         },
         {
             id: 6,
-            name: "image",
+            name: "phone",
+            type: "text",
+            placeholder: "Phone",
+            label: "Phone",
+            errorMessage: "Vui lòng nhập đúng số điện thoại",
+            pattern: "[0-9_]{9,11}",
+            required: true
+        },
+        {
+            id: 7,
+            name: "created_at",
+            type: "text",
+            placeholder: "Created At",
+            label: "Created At",
+            disable: true.toString(),
+            typetime: true.toString(),
+        },
+        {
+            id: 8,
+            name: "avatar",
             type: "file",
             placeholder: "Choose a image",
             label: "Choose a image",
             accept: "image/png, image/jpeg, image/gif, image/jpg",
         },
+
 
     ];
 
@@ -97,6 +137,54 @@ function Dashboard() {
         // console.log({...values, [e.target.name]: "hello"})
     }
 
+
+    const handlePreviewImage = (e) => {
+        const file = e.target.files[0];
+        // console.log(URL.createObjectURL(file))
+
+        // tự thêm attribute
+        file.preview = URL.createObjectURL(file);
+        setImage(file);
+    }
+
+    useEffect(() => {
+
+        // cleanup
+        return () => {
+            // xóa ảnh cũ
+            image && URL.revokeObjectURL(image.preview)
+        }
+    }, [image]);
+
+    // fetch api
+    // users
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/users/read.php")
+            .then((res) => {
+                // console.log("data", res.data)
+                setListUsers(res.data);
+            })
+
+            .catch(() => {
+                console.log("error")
+                
+            })
+    }, [openModalCreateUser, openModalUpdateUser, openModalDeleteUser]);
+
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/roles/read.php")
+            .then((res) => {
+                console.log("data roles", res.data)
+                setListRoles(res.data);
+                // setListUsers(res.data);
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [])
+
+    // create
     const resetValueCreate = () => {
         let newObj = {}
         for (let key in values) {
@@ -104,16 +192,29 @@ function Dashboard() {
         }
 
         setValues(newObj);
+        setImage("");
     }
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
 
+        // console.log("image", image);
+
+        data.append("name", values.name);
         data.append("username", values.username);
         data.append("email", values.email);
         data.append("password", values.password);
-        data.append("role", "Admin");
+        data.append("phone", values.phone);
+        data.append("avatar", image)
+
+        listRoles.find((item) => {
+            if (item.name === nameCombobox) {                
+                data.append("role_id", item.id);
+                console.log("id", item.id);
+            }
+        })
+
 
         let checkBool = true;
         listUsers.find((item) => {
@@ -153,18 +254,6 @@ function Dashboard() {
         // console.log(values.username);
     }
 
-    useEffect(() => {
-        axios.get("http://localhost/manga-comic-be/")
-            .then((res) => {
-                // console.log("data", res.data)
-                setListUsers(res.data);
-            })
-
-            .catch(() => {
-                console.log("error")
-            })
-    }, [openModalCreateUser, openModalUpdateUser, openModalDeleteUser]);
-
     const handleToastNotify = () => {
         toastRef.current.showToast();
     }
@@ -173,6 +262,13 @@ function Dashboard() {
     const handleClickBtnUpdate = (user, e) => {
         setOpenModalUpdateUser(true);
         setDataUpdate(user);
+        
+        // loadcombobox
+        setNameCombobox(user.role_name);
+        console.log("role name:", user.role_name)
+        if (user.avatar) {
+            setImage(user.avatar)
+        }
         // setValues(user);        
         // console.log(user)
         // let newObj = {};
@@ -197,8 +293,22 @@ function Dashboard() {
         const data = new FormData(e.target);
 
         if (dataUpdate && dataUpdate !== {}) {
+            console.log("dataupdate", dataUpdate);
             for (let key in dataUpdate) {
-                data.append(key.toString(), dataUpdate[key])
+                console.log("key", key);
+                if (key.toString() === "avatar") {
+                    data.append(key.toString(), image)
+                } else if(key.toString() === "role_name") {
+                    listRoles.find((item) => {
+                        if (item.name === nameCombobox) {                
+                            data.append("role_id", item.id);
+                        }
+                    })
+                } else if(key.toString() === "role_id") {
+                    
+                } else {
+                    data.append(key.toString(), dataUpdate[key])
+                }
             }
             // console.log("data:", data);
             // console.log("data entry:", Object.fromEntries(data.entries()))
@@ -288,15 +398,20 @@ function Dashboard() {
     return (
         <Fragment>
             <div className={clsx(styles.wrapper)}>
-                {/* Dashboard */}
+                {/* Table */}
                 <div className={clsx(styles.heading)}>
-                    TEST Quản lý người dùng
+                    Quản lý người dùng
                 </div>
                 <div className={clsx(styles.addUser)}>
                     <Button primary
                         medium
                         iconLeft={<PlusIcon />}
-                        onClick={() => setOpenModalCreateUser(true)}
+                        onClick={() => {
+                            // load combobox
+                            const find = listRoles.find(element => element.id === 1)
+                            setNameCombobox(find.name)        
+                            setOpenModalCreateUser(true)                            
+                        }}
                     >Add new user</Button>
                 </div>
                 <table className={clsx(styles.table)}>
@@ -312,13 +427,12 @@ function Dashboard() {
                     <tbody>
                         {listUsers && listUsers.length > 0 &&
                             listUsers.map((item, index) => {
-
                                 return (
                                     <tr key={index}>
                                         <td>{item.id}</td>
                                         <td>{item.username}</td>
                                         <td>{item.email}</td>
-                                        <td>{item.role}</td>
+                                        <td>{item.role_name}</td>
                                         <td>
                                             <Button view
                                                 onClick={() => {
@@ -345,11 +459,6 @@ function Dashboard() {
             </div>
 
             {/* Toastify */}
-            {/* <Toastify warning icon={<PlusIcon />}
-                ref={toastRef}
-                timeout={3000}
-            >Toastify</Toastify> */}
-
             {typeNotify === "" ?
                 <Toastify icon={<PlusIcon />}
                     ref={toastRef}
@@ -404,12 +513,26 @@ function Dashboard() {
                         </div>
                         <div className={clsx(styles.body)}>
                             {inputs.map((item, index) => {
+                                if (item.typetime) {
+                                    return;
+                                }
+
+                                if (item.combobox) {
+                                    return (
+                                        <FormInput key={index}
+                                            dataCombobox={listRoles}
+                                            {...item}
+                                        />
+                                    )
+                                }
 
                                 if (item.type === "file") {
                                     return (
                                         <FormInput
                                             key={index}
+                                            onChange={handlePreviewImage}
                                             value={values[item.name]}
+                                            imagePreview={image.preview}
                                             {...item}
                                         />
                                     )
@@ -449,11 +572,35 @@ function Dashboard() {
                         </div>
                         <div className={clsx(styles.body)}>
                             {inputs.map((item, index) => {
+                                if (item.typetime) {
+                                    return;
+                                }
+
+                                if (item.combobox) {
+                                    return (
+                                        <FormInput key={index}
+                                            dataCombobox={listRoles}
+                                            {...item}
+                                        />
+                                    )
+                                }
+
+                                if (item.type === "file") {
+                                    return (
+                                        <FormInput
+                                            key={index}
+                                            onChange={handlePreviewImage}
+                                            imagePreview={image.preview ?? image}
+                                            {...item}
+                                        />
+                                    )
+                                }
+
                                 return (
                                     <FormInput
                                         key={index}
                                         value={dataUpdate[item.name]}
-                                        preview="https://lh3.googleusercontent.com/fife/AMPSemdzlzHyy1LN7ntzlAJlLzplTeck3qrrbzlkLUam8gX1sVsOd8m1hvPEgOK4j-rl3tyZ2ET16PlfMM7_QHFQQ8cvrU_cyg1-BqGjh0-qJRBEY0yMasqlLSFmdyUbhLd-LaH4JiNPgVhJ9ghhJwkCbMmtqod4dPpK_N5ixemcAyifUv0gt0_i6d0EOSdcDIrKpHVE2AcFqVvZXsecB3W3CBY06OyMblxUoJBI7mkeDZD70ZE0JAuTOVDheGk3z4XC90gK-08QeVE5dGFNlJeTsU_0HjNTX84cpfn2BgtuQ82Au3-6YEq1cZkDePT45kqVPDQqeswS8naanS8okgCLs7G1Aum_Wky7rziRS4BBNYQbhA1aBtDbHR6yV_OuukCDYwJ7nGCFYAILOzpVTWtm-uX3Qz1h6rfQoaTAYG2tamyva9qausn5sNe3xLsztrPKfD0h3YyUVxjWNaje7qaTPuh2WgxS_ls4hwawut0Cy6vpNbmtQxzUyfBu8CUMCGSrGVHAVgYVZQJSZIgf71HekgBc7IzRVJRNa28YG6OPUAnKTK_K31ur5ck_-x2ZZKDhWSjtkxwl30ddPMIbd67ntq9XH7_opAzYDma1_3_S8VUj2W-xI7e0DoEq4_-XAKChzcf_kl0mDD0IX6FDjixHACeFqHjVKTwjdhkhoCZJhHDlNnpUG0eBV_4nmHOdvQ3dSa405rwuv5-8vszsWlT8RHvF5mQkTv6N08ezDfZtKivAP-O7fh82xMzf7jJ_xbbBVqYQpOr5_eqhYuh8gEoDit7QDNS85Y3Ryt5FsA7FIQ40m_-frZ3dntAQdPW0F3IBtuGvbYNOKzfTTw2D7ywq4KFHJH1qYYNvgJ794pu2TP5VExGmJUcsWJVBAWNt8prp2imjjLeVz3MxfinOLF3dAeKtG_OxulZN2F73_lukcdU5AU6jwbJkTbYgjGjSBXV7qgqRK-3mUfu5XjyB1R1j1tdPKPdm5agnpDW9_8SjygWgUc0NGFI4qh2hLZt01X5AzGlJxde5YyuvVUo5hx4d_IHomNFwkOwbzBjXKk1qEDDWeKM9ZpmrpryshKDbYy0G7FYCZfgoo9x092UkRtoIuZ7_AZl9AR2FQ1DNvRWx6lvNv3AbYRIIwlVGIsq_G_ejLB4DofrzsMXc5Y7HEjoTpUpUvkbtIeLdmrnLjOZsFiWyifMHfj1LWd2-wMsL7qZ1BWjf2TG3IZESOR8ApvO5NLTMEyDN774s2wTCMIeSraslkOtMvFlgYoWUe-rMBXOcR5wFRDp6B4kNRwHVtB95LcDMskQRx9lR2wLzEi9W23QiB5jcf3gxTXRzUC7_yEweWKKeXPTHYGDjL0nScw83R3WJ5Yly4Lp1OdTPGw3iRB8nDQVTsGAxMIS7LWYpT32dvOUkLH64koTNmEiv4eWHoxg7EWgBi0CIyA9D601VN3PFB1ylkPrDrS4B7929RmS4aRa0ZktjUMMGDz1wMySrUsi9lp_8pajHgRM2X4Qrei6UyMpKBtiX68ob71YX=w1920-h942"
+                                        imagePreview={dataUpdate[item.name]}
                                         onChange={onChangeInputUpdate}
                                         {...item}
                                     />
@@ -484,18 +631,30 @@ function Dashboard() {
                             View a user
                         </div>
                         <div className={clsx(styles.body)}>
+                            {/* view */}
                             {inputs.map((item, index) => {
+                                if (item.type === "file") {
+                                    return (
+                                        <FormInput
+                                            key={index}
+                                            onChange={() => { }}
+                                            value={dataUserView[item.name]}
+                                            imagePreview={dataUserView[item.name]}
+                                            onlyRead="true"
+                                            {...item}
+                                        />
+                                    )
+                                }
+
                                 return (
                                     <FormInput
                                         key={index}
                                         value={dataUserView[item.name]}
-                                        onChange={() => { }}
-                                        disable="true"
-                                        preview="https://lh3.googleusercontent.com/fife/AMPSemdzlzHyy1LN7ntzlAJlLzplTeck3qrrbzlkLUam8gX1sVsOd8m1hvPEgOK4j-rl3tyZ2ET16PlfMM7_QHFQQ8cvrU_cyg1-BqGjh0-qJRBEY0yMasqlLSFmdyUbhLd-LaH4JiNPgVhJ9ghhJwkCbMmtqod4dPpK_N5ixemcAyifUv0gt0_i6d0EOSdcDIrKpHVE2AcFqVvZXsecB3W3CBY06OyMblxUoJBI7mkeDZD70ZE0JAuTOVDheGk3z4XC90gK-08QeVE5dGFNlJeTsU_0HjNTX84cpfn2BgtuQ82Au3-6YEq1cZkDePT45kqVPDQqeswS8naanS8okgCLs7G1Aum_Wky7rziRS4BBNYQbhA1aBtDbHR6yV_OuukCDYwJ7nGCFYAILOzpVTWtm-uX3Qz1h6rfQoaTAYG2tamyva9qausn5sNe3xLsztrPKfD0h3YyUVxjWNaje7qaTPuh2WgxS_ls4hwawut0Cy6vpNbmtQxzUyfBu8CUMCGSrGVHAVgYVZQJSZIgf71HekgBc7IzRVJRNa28YG6OPUAnKTK_K31ur5ck_-x2ZZKDhWSjtkxwl30ddPMIbd67ntq9XH7_opAzYDma1_3_S8VUj2W-xI7e0DoEq4_-XAKChzcf_kl0mDD0IX6FDjixHACeFqHjVKTwjdhkhoCZJhHDlNnpUG0eBV_4nmHOdvQ3dSa405rwuv5-8vszsWlT8RHvF5mQkTv6N08ezDfZtKivAP-O7fh82xMzf7jJ_xbbBVqYQpOr5_eqhYuh8gEoDit7QDNS85Y3Ryt5FsA7FIQ40m_-frZ3dntAQdPW0F3IBtuGvbYNOKzfTTw2D7ywq4KFHJH1qYYNvgJ794pu2TP5VExGmJUcsWJVBAWNt8prp2imjjLeVz3MxfinOLF3dAeKtG_OxulZN2F73_lukcdU5AU6jwbJkTbYgjGjSBXV7qgqRK-3mUfu5XjyB1R1j1tdPKPdm5agnpDW9_8SjygWgUc0NGFI4qh2hLZt01X5AzGlJxde5YyuvVUo5hx4d_IHomNFwkOwbzBjXKk1qEDDWeKM9ZpmrpryshKDbYy0G7FYCZfgoo9x092UkRtoIuZ7_AZl9AR2FQ1DNvRWx6lvNv3AbYRIIwlVGIsq_G_ejLB4DofrzsMXc5Y7HEjoTpUpUvkbtIeLdmrnLjOZsFiWyifMHfj1LWd2-wMsL7qZ1BWjf2TG3IZESOR8ApvO5NLTMEyDN774s2wTCMIeSraslkOtMvFlgYoWUe-rMBXOcR5wFRDp6B4kNRwHVtB95LcDMskQRx9lR2wLzEi9W23QiB5jcf3gxTXRzUC7_yEweWKKeXPTHYGDjL0nScw83R3WJ5Yly4Lp1OdTPGw3iRB8nDQVTsGAxMIS7LWYpT32dvOUkLH64koTNmEiv4eWHoxg7EWgBi0CIyA9D601VN3PFB1ylkPrDrS4B7929RmS4aRa0ZktjUMMGDz1wMySrUsi9lp_8pajHgRM2X4Qrei6UyMpKBtiX68ob71YX=w1920-h942"
+                                        onChange={onChangeInput}
+                                        onlyRead="true"
                                         {...item}
                                     />
                                 )
-
                             })}
                         </div>
                     </div>
@@ -530,19 +689,6 @@ function Dashboard() {
                                     <p>email:<b>{dataDelete && dataDelete.email}</b></p>
                                 </div>
                             </div>
-                            {/* {inputs.map((item, index) => {
-                                return (
-                                    <FormInput
-                                        key={index}
-                                        value={dataUserView[item.name]}
-                                        onChange={() => {}}
-                                        disable="true"
-                                        preview="https://lh3.googleusercontent.com/fife/AMPSemdzlzHyy1LN7ntzlAJlLzplTeck3qrrbzlkLUam8gX1sVsOd8m1hvPEgOK4j-rl3tyZ2ET16PlfMM7_QHFQQ8cvrU_cyg1-BqGjh0-qJRBEY0yMasqlLSFmdyUbhLd-LaH4JiNPgVhJ9ghhJwkCbMmtqod4dPpK_N5ixemcAyifUv0gt0_i6d0EOSdcDIrKpHVE2AcFqVvZXsecB3W3CBY06OyMblxUoJBI7mkeDZD70ZE0JAuTOVDheGk3z4XC90gK-08QeVE5dGFNlJeTsU_0HjNTX84cpfn2BgtuQ82Au3-6YEq1cZkDePT45kqVPDQqeswS8naanS8okgCLs7G1Aum_Wky7rziRS4BBNYQbhA1aBtDbHR6yV_OuukCDYwJ7nGCFYAILOzpVTWtm-uX3Qz1h6rfQoaTAYG2tamyva9qausn5sNe3xLsztrPKfD0h3YyUVxjWNaje7qaTPuh2WgxS_ls4hwawut0Cy6vpNbmtQxzUyfBu8CUMCGSrGVHAVgYVZQJSZIgf71HekgBc7IzRVJRNa28YG6OPUAnKTK_K31ur5ck_-x2ZZKDhWSjtkxwl30ddPMIbd67ntq9XH7_opAzYDma1_3_S8VUj2W-xI7e0DoEq4_-XAKChzcf_kl0mDD0IX6FDjixHACeFqHjVKTwjdhkhoCZJhHDlNnpUG0eBV_4nmHOdvQ3dSa405rwuv5-8vszsWlT8RHvF5mQkTv6N08ezDfZtKivAP-O7fh82xMzf7jJ_xbbBVqYQpOr5_eqhYuh8gEoDit7QDNS85Y3Ryt5FsA7FIQ40m_-frZ3dntAQdPW0F3IBtuGvbYNOKzfTTw2D7ywq4KFHJH1qYYNvgJ794pu2TP5VExGmJUcsWJVBAWNt8prp2imjjLeVz3MxfinOLF3dAeKtG_OxulZN2F73_lukcdU5AU6jwbJkTbYgjGjSBXV7qgqRK-3mUfu5XjyB1R1j1tdPKPdm5agnpDW9_8SjygWgUc0NGFI4qh2hLZt01X5AzGlJxde5YyuvVUo5hx4d_IHomNFwkOwbzBjXKk1qEDDWeKM9ZpmrpryshKDbYy0G7FYCZfgoo9x092UkRtoIuZ7_AZl9AR2FQ1DNvRWx6lvNv3AbYRIIwlVGIsq_G_ejLB4DofrzsMXc5Y7HEjoTpUpUvkbtIeLdmrnLjOZsFiWyifMHfj1LWd2-wMsL7qZ1BWjf2TG3IZESOR8ApvO5NLTMEyDN774s2wTCMIeSraslkOtMvFlgYoWUe-rMBXOcR5wFRDp6B4kNRwHVtB95LcDMskQRx9lR2wLzEi9W23QiB5jcf3gxTXRzUC7_yEweWKKeXPTHYGDjL0nScw83R3WJ5Yly4Lp1OdTPGw3iRB8nDQVTsGAxMIS7LWYpT32dvOUkLH64koTNmEiv4eWHoxg7EWgBi0CIyA9D601VN3PFB1ylkPrDrS4B7929RmS4aRa0ZktjUMMGDz1wMySrUsi9lp_8pajHgRM2X4Qrei6UyMpKBtiX68ob71YX=w1920-h942"
-                                        {...item}
-                                    />
-                                )
-
-                            })} */}
                         </div>
                     </div>
                     <div className={clsx(styles.userActive)}>
@@ -557,4 +703,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard;
+export default Users;

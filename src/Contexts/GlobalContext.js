@@ -34,6 +34,10 @@ const GlobalContext = React.createContext({
     dataItemChapter: {},
     setDataItemChapter: () => {},
 
+    // sidebar header
+    toggleSidebar: false,
+    setToggleSidebar: () => {},
+
 })
 
 export default GlobalContext;

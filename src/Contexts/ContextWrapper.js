@@ -13,6 +13,7 @@ function ContextWrapper(props) {
     const [newsDetail, setNewsDetail] = useState({});
     const [fetchApiComment, setFetchApiComment] = useState(false);
     const [dataItemChapter, setDataItemChapter] = useState({});
+    const [toggleSidebar, setToggleSidebar] = useState(false);
 
     // combobox
     const [nameCombobox, setNameCombobox] = useState("");    
@@ -41,6 +42,9 @@ function ContextWrapper(props) {
                 setFetchApiComment,
                 dataItemChapter,
                 setDataItemChapter,
+                // toggle sidebar header 
+                toggleSidebar,
+                setToggleSidebar,                                
             }}>
             {props.children}
         </GlobalContext.Provider>

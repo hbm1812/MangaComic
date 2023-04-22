@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Button from "../../Components/Button";
 import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
@@ -12,17 +12,19 @@ import isEmpty from "validator/lib/isEmpty";
 import Image from "../../Components/Image";
 import FormInput from "../../Components/FormInput";
 import { UploadIcon } from "../../Components/Icon";
+import axios from "axios";
+import GlobalContext from "../../Contexts/GlobalContext";
 
 
 function Login() {
     // router dom
     const navigate = useNavigate();
-
     const [values, setValues] = useState({
         username: "",
         password: "",
     });
-
+    const [listUsers, setListUsers] = useState([]);
+    // console.log("listUsers", listUsers);
     const inputs = [
         {
             id: 1,
@@ -30,8 +32,8 @@ function Login() {
             type: "text",
             placeholder: "Username",
             label: "Username",
-            errorMessage: "Vui lòng nhập tên đăng nhập 3-16 ký tự",
-            pattern: "[A-Za-z0-9_]{3,15}",
+            errorMessage: "Vui lòng nhập tên đăng nhập 3-20 ký tự",
+            pattern: "[A-Za-z0-9_]{3,20}",
             required: true
         },
         {
@@ -40,43 +42,45 @@ function Login() {
             type: "password",
             placeholder: "Password",
             label: "Password",
-            errorMessage: "Vui lòng nhập mật khẩu 3-16 ký tự",
-            pattern: "[A-Za-z0-9_]{3,15}",
+            errorMessage: "Vui lòng nhập mật khẩu 3-20 ký tự",
+            pattern: "[A-Za-z0-9_]{3,20}",
             required: true
         },
     ];
 
-    const onHandleSubmit = async (e) => {
-        e.preventDefault();
-        const data = new FormData(e.target);
-        console.log(data);
-        console.log(Object.fromEntries(data.entries()))
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/users/read.php")
+            .then((res) => {
+                // console.log("data", res.data)
+                setListUsers(res.data);
+            })
 
-        // try {
-        //     const res = await request.post({
-        //         method: "post",
-        //         url: "localhost",
-        //         data: data,
-        //         config: {
-        //             header: {
-        //                 'Content-Type': 'multipart/form-data'
-        //             }
-        //         }
-        //     });
-        //     console.log(res);
-        // } catch (error) {
-        //     console.log(error)
+            .catch(() => {
+                console.log("error")
+                
+            })
+    }, [])
 
-        // }
+    const onHandleSubmit = (e) => {
+        e.preventDefault();   
 
+        console.log("values", values)
+        
+        let filter = listUsers.filter(item => item.username === values.username && item.password === values.password)
+        console.log("filter", filter);
 
+        if(filter.length > 0 ) {
+            const jsonUser = JSON.stringify(filter[0]);
+            localStorage.setItem("DataUser", jsonUser);
+            navigate("/")
+        }
     }
 
     const onChangeInput = (e) => {
         // e.target.name lấy key trong obj
         // e.target.value lấy giá trị trong obj
         setValues({ ...values, [e.target.name]: e.target.value })
-    }
+    }    
 
     return (
         <div className={clsx(styles.container)}>
@@ -100,7 +104,7 @@ function Login() {
                 <Button primary large>Login</Button>
                 {/* <Button iconLeft={<UploadIcon/>} transparent large>Login with Google</Button>                 */}
                 <div className={clsx(styles.register)}>
-                    don't have an account? 
+                    Don't have an account? 
                     <span
                         onClick={() => navigate("/register")}
                     >Register now!</span>

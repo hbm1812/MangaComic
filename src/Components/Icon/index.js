@@ -35,6 +35,7 @@ import {
     faFaceSmile,
     faCircleCheck,
     faComment,
+    faNewspaper,
 } from '@fortawesome/free-regular-svg-icons';
 
 import { AiFillLayout } from "react-icons/ai";
@@ -409,6 +410,15 @@ function ArrowsToEyeIcon({ className, onClick }) {
     );
 }
 
+function NewsPaperIcon({ className, onClick }) {
+    const props = {
+        onClick,
+    };
+    return (
+        <FontAwesomeIcon icon={faNewspaper} className={className} {...props} />
+    );
+}
+
 // react icons (fail)
 function FillLayout({ className, onClick, width = "50px", height = "50px" }) {
     const props = {
@@ -480,4 +490,5 @@ export {
     FillLayout,
     TableCellsLargeIcon,
     ArrowsToEyeIcon,
+    NewsPaperIcon,
 };

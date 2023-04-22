@@ -27,7 +27,7 @@ function FormInput({ ...props }) {
                     <input id={id} placeholder={props.placeholder} {...inputProps}
                         onChange={onChange}
                         onBlur={onHandleFocus}
-                        focused={focus.toString()}
+                        focused={focus.toString()}                        
                         disable={onlyRead}
                     />
                     <span>{errorMessage}</span>

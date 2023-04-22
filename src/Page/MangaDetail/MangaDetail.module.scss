@@ -144,7 +144,8 @@
                         .icon {
                             margin-right: 10px;
                             font-size: 24px;
-                        }
+                            cursor: pointer;
+                        }                        
                     }
     
                     .satisfied {
@@ -158,6 +159,10 @@
                     .favorite {
                         .icon {
                             color: rgb(248, 113, 113);
+                        }
+
+                        .icon.active {
+                            color: rgb(249, 45, 45);
                         }
                     }
                 }
