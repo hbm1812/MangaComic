@@ -2,6 +2,7 @@ import clsx from "clsx";
 import styles from "./Menu.module.scss";
 import MenuItem from "./MenuItem";
 import PropTypes from "prop-types";
+import { WindowScrollTop } from "../../util";
 
 Menu.propTypes = {
     children: PropTypes.node,
@@ -12,7 +13,9 @@ function Menu({ children, items=[] }) {
 
     const renderItem = () => {
         return items.map((item, index) => (
-            <MenuItem key={index} data = {item} />
+            <MenuItem key={index} data = {item} onClick={() => {
+                WindowScrollTop();
+            }}/>
         ));
     }
 

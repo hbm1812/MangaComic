@@ -122,7 +122,7 @@ function MangaDetail() {
     const params = useParams();
     // console.log("params", params)
     const navigate = useNavigate();
-    const { dataItemChapter, setDataItemChapter, dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
+    const { dataItemChapter, setDataItemChapter, selectedIdCharacter, setSelectedIdCharacter } = useContext(GlobalContext);
     // console.log("dataItemChapter", dataItemChapter)
     // sources languages
     const [selectLanguages, setSelectLanguages] = useState("");
@@ -132,8 +132,12 @@ function MangaDetail() {
     const [toggleMenuChapter, setToggleMenuChapter] = useState(false);
     // characters
     const [toggleDetailChar, setToggleDetailChar] = useState(false);
-    const [showDetailChar, setShowDetailChar] = useState(-1);
+    const [showDetailChar, setShowDetailChar] = useState(selectedIdCharacter);
 
+    useEffect(() => {
+        setShowDetailChar(selectedIdCharacter)
+    }, [selectedIdCharacter])
+    console.log("showDetailChar", showDetailChar)
     // data 
     const [itemManga, setItemManga] = useState([]);
     const [dataCategoryInStory, setDataCategoryInStory] = useState([]);
@@ -147,6 +151,8 @@ function MangaDetail() {
     // user active 
     const [activeView, setActiveView] = useState(false);
     const [listActiveView, setListActiveView] = useState([]);
+    const [activeFavorite, setActiveFavorite] = useState(false);
+    const [listActiveFavorite, setListActiveFavorite] = useState([]);
 
 
     // findStory
@@ -179,16 +185,7 @@ function MangaDetail() {
         findCategory = dataCategoryInStory.filter(item => item.story_id === itemManga[0].id)
     }
 
-    let getSatisfied = 0;
-    if (itemManga.length !== 0) {
-        if (itemManga[0].view_count !== 0 && itemManga[0].favorite_count !== 0) {
-            getSatisfied = itemManga[0].view_count / itemManga[0].favorite_count;
-        } else {
-            getSatisfied = 0;
-        }
-    } else {
-        getSatisfied = 0
-    }
+    console.log("findCategory", findCategory)
 
     // find chapter
     useEffect(() => {
@@ -263,19 +260,21 @@ function MangaDetail() {
             .catch(() => {
                 console.log("error")
             })
-    }, [activeView])
+    }, [])
 
-    const filterCountView = listActiveView.filter(item => item.stories_id)
-    console.log("filterCountView", filterCountView)
+    const filterCountView = itemManga.length > 0 && listActiveView.filter(item => item.stories_id === itemManga[0].id)
+    // console.log("filterCountView", filterCountView);
+    // console.log("itemManga", itemManga)
+    // console.log("filterCountView", filterCountView)
 
     const handleAddViews = () => {
         if (LocalUserLogin) {
             const data = new FormData();
             console.log("data", data)
-    
+
             data.append("user_id", LocalUserLogin.id);
             data.append("stories_id", params.idManga);
-    
+
             axios({
                 method: "POST",
                 url: "http://localhost/manga-comic-be/api/stories/addView.php",
@@ -289,11 +288,189 @@ function MangaDetail() {
                 .catch(() => {
                     console.log("error");
                 })
-    
-            console.log("data:", data);
-            console.log("data entry:", Object.fromEntries(data.entries()))
+
+            // console.log("data:", data);
+            // console.log("data entry:", Object.fromEntries(data.entries()))
         }
     }
+
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/getFavorite.php`)
+            .then((res) => {
+                setListActiveFavorite(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [activeFavorite])
+
+    const filterCountFavorite = itemManga.length > 0 && listActiveFavorite.filter(item => item.stories_id == itemManga[0].id)
+    console.log("filterCountFavorite", filterCountFavorite)
+    // console.log("listActiveFavorite", listActiveFavorite)    
+
+    const handleAddFavorite = () => {
+        let filterFavoriteActive = listActiveFavorite.filter(item => item.stories_id == params.idManga && item.user_id == LocalUserLogin.id)
+        // console.log("filterFavoriteActive", filterFavoriteActive);
+
+        if (LocalUserLogin && filterFavoriteActive.length < 1) {
+            const data = new FormData();
+            console.log("data", data)
+
+            data.append("user_id", LocalUserLogin.id);
+            data.append("stories_id", params.idManga);
+
+            axios({
+                method: "POST",
+                url: "http://localhost/manga-comic-be/api/stories/addFavorite.php",
+                data: data,
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+                .then(() => {
+                    console.log("success");
+                    setActiveFavorite(!activeFavorite);
+                })
+                .catch(() => {
+                    console.log("error");
+                })
+
+            // console.log("data:", data);
+            // console.log("data entry:", Object.fromEntries(data.entries()))
+        }
+    }
+
+    // getSatisfied
+    let getSatisfied = 0;
+    if(filterCountFavorite.length !== 0 && filterCountView.length !== 0) {
+        getSatisfied =(filterCountFavorite.length / filterCountView.length * 100).toPrecision(4);    
+    }
+
+    console.log("filterCountFavorite.length", filterCountFavorite.length)
+    console.log("filterCountView.length", filterCountView.length)
+    console.log("getSatisfied", getSatisfied)
+
+
+    const [storiesGenres, setStoriesGenres] = useState([]);
+    // get story with genres 
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/getStoriesGenres.php`)
+            .then((res) => {
+                // setDataChapter(res.data)
+                setStoriesGenres(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, []);
+    // console.log("storiesGenres", storiesGenres)
+
+    // let newArrWithGenres = [];
+    // let filterStoryWithGenres = [];
+    // useEffect(() => {
+    //     for(let i = 0; i< findCategory.length; i++){
+    //         console.log("findCategory index", findCategory[i].id)
+    //         filterStoryWithGenres = storiesGenres.filter(item => item.story_id == params.idManga);
+    //     }
+
+
+    // }, [findCategory])
+    let filterStoryWithGenres = [];
+    for (let i = 0; i < findCategory.length; i++) {
+        let genres = storiesGenres.filter(item => item.genres_id == findCategory[i].id)
+        console.log("genres index", genres)
+        if (genres.length > 0) {
+            let index = 0;
+            let newArr = genres.filter(item => item.story_id != params.idManga);
+            console.log("newArr", newArr)
+            if (newArr.length > 0) {
+                if (index >= newArr.length) {
+                    break;
+                } else {
+                    filterStoryWithGenres.push(newArr[index]);
+                    index++;
+                    console.log("index", index);
+                }
+            }
+        }
+    }
+
+    // let newArr = [];
+    // if(filterStoryWithGenres.length > 0) {
+    //     filterStoryWithGenres.map((item, index) => {
+    //         console.log("item genres", item);
+    //         // let man = item[index].concat(item[index + 1]);
+    //         // newArr.push(man);
+    //     })
+    // }
+    // console.log("newArr", newArr)
+
+    // console.log("filterStoryWithGenres", filterStoryWithGenres)
+    // // const filterPhase2 = filterStoryWithGenres.filter(item => )
+
+    const [dataManga, setDataManga] = useState([]);
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/read.php`)
+            .then((res) => {
+                // setDataChapter(res.data)
+                setDataManga(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, []);
+    console.log("filterStoryWithGenres", filterStoryWithGenres)
+    console.log("dataManga", dataManga)
+    console.log("dataChapter", dataChapter)
+
+    let chapterMax = 0;
+    let arrSaveDataChapterLastest = [];
+    const dataChapterLastest = dataChapter.filter(item => {
+        console.log("chapter lastest", item)
+        let handleName = item.name.split(" ");
+        let getArr = parseInt(handleName[handleName.length - 1]);
+        if (chapterMax < getArr) {
+            if(arrSaveDataChapterLastest.length > 0) {
+                arrSaveDataChapterLastest.pop();
+            }
+            chapterMax = getArr;
+            arrSaveDataChapterLastest.push(item);
+            return item;
+        }
+    })
+
+    console.log("arrSaveDataChapterLastest", arrSaveDataChapterLastest)
+    // console.log("chapterMax", chapterMax)
+
+
+    const filterMangaRecommend = [];
+    for (let j = 0; j < filterStoryWithGenres.length; j++) {
+        let manga = dataManga.filter(item => item.id === filterStoryWithGenres[j].story_id)                        
+        filterMangaRecommend.push(manga[0])
+    }
+    // console.log("filterMangaRecommend final", filterMangaRecommend)
+    let handleMangaRecommendRepeat = new Set(filterMangaRecommend)
+    // console.log("handleMangaRecommendRepeat final", handleMangaRecommendRepeat)
+    let dataMangaRecommendConvertToArr = [...handleMangaRecommendRepeat];
+    // console.log("dataMangaRecommendConvertToArr final", dataMangaRecommendConvertToArr)
+    
+    // console.log("itemManga", itemManga)
+
+    // get character 
+    const [listCharacter, setListCharacter] = useState([]);
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/getCharacter.php?story_id=${params.idManga ?? ""}`)
+            .then((res) => {
+                setListCharacter(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [params.nameManga])
+
+    console.log("listCharacter", listCharacter);
 
     return (
         <div className={clsx(styles.wrapper)}>
@@ -308,14 +485,20 @@ function MangaDetail() {
 
                     </div>
                     <div className={clsx(styles.detail)}>
-                        <div className={clsx(styles.detailTop)}>
-                            <Button primary medium scale iconLeft={<PlayIcon />}
-                                onClick={() => { }}
-                            >Read Now</Button>
-                            <Button outline medium scale
-                                onClick={() => { }}
-                            >Chapter Lastest</Button>
-                        </div>
+                        {itemManga.length > 0 &&
+                            <div className={clsx(styles.detailTop)}>
+                                <Button primary medium scale iconLeft={<PlayIcon />}
+                                    to={`/manga/read/${itemManga[0].keyword}/${itemManga[0].id}`}
+                                    onClick={() => { }}
+                                >Read Now</Button>
+                                {arrSaveDataChapterLastest.length > 0 &&
+                                    <Button primary medium scale
+                                        to={`/manga/read/${arrSaveDataChapterLastest[0].keyword}/${arrSaveDataChapterLastest[0].id}`}
+                                        onClick={() => { }}
+                                    >Chapter Lastest</Button>                                
+                                }
+                            </div>
+                        }
                         <div className={clsx(styles.detailMain)}>
                             <h1 className={clsx(styles.name)}>
                                 {itemManga.length !== 0 && itemManga[0].name}
@@ -342,7 +525,7 @@ function MangaDetail() {
                             </p>
                             <p className={clsx(styles.country)}>
                                 Country
-                                <span>Coming soon</span>
+                                <span>{itemManga.length > 0 && itemManga[0].country}</span>
                             </p>
                             <p className={clsx(styles.status)}>
                                 Status
@@ -372,9 +555,9 @@ function MangaDetail() {
                                         <HeartIcon className={clsx(styles.icon, {
                                             // [styles.active]: true
                                         })}
-                                            onClick={handleAddViews}
+                                            onClick={handleAddFavorite}
                                         />
-                                        <p>{filterCountView.length ?? itemManga[0].favorite_count}</p>
+                                        <p>{filterCountFavorite.length ?? itemManga[0].favorite_count}</p>
                                     </div>
                                 </div>
                             }
@@ -416,7 +599,7 @@ function MangaDetail() {
                                 views
                             </p>
                             <p className={clsx(styles.value)}>
-                                {filterCountView.length ?? itemManga[0].view_count}
+                                {filterCountView && filterCountView.length}
                             </p>
                         </div>
                         <div className={clsx(styles.item)}>
@@ -424,7 +607,7 @@ function MangaDetail() {
                                 favorite
                             </p>
                             <p className={clsx(styles.value)}>
-                                {itemManga.length !== 0 && itemManga[0].favorite_count}
+                                {filterCountFavorite && filterCountFavorite.length}
                             </p>
                         </div>
                     </div>
@@ -521,28 +704,40 @@ function MangaDetail() {
                         </div>
                     </div>
                 </div>
-                <div className={clsx(styles.characters)}>
-                    <Heading>Nhân vật</Heading>
-                    <div className={clsx(styles.listAvatarChar)}>
-                        {/* {CHARACTER.map((item, index) => {
-                            return (
-                                <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
-                                    setShowDetailChar(index)
-                                    setToggleDetailChar(!toggleDetailChar)
-                                }} />
-                            )
-                        })} */}
-                        {
-                            // itemManga[0].character.map((item, index) => (
-                            //     <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
-                            //         setShowDetailChar(index)
-                            //         setToggleDetailChar(!toggleDetailChar)
-                            //     }} />
-                            // ))
-                        }
-                    </div>
-                </div>
-                <div className={clsx(styles.relation)}>
+                {listCharacter.length > 0 && 
+                    <div className={clsx(styles.characters)}>
+                        <Heading>Nhân vật</Heading>
+                        <div className={clsx(styles.listAvatarChar)}>
+                            {/* {CHARACTER.map((item, index) => {
+                                return (
+                                    <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
+                                        setShowDetailChar(index)
+                                        setToggleDetailChar(!toggleDetailChar)
+                                    }} />
+                                )
+                            })} */}
+
+                            {listCharacter.map((item, index) => {
+                                return (
+                                    <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} listCharacter={listCharacter} onClick={() => {
+                                        setSelectedIdCharacter(item.id)
+                                        setToggleDetailChar(!toggleDetailChar)
+                                    }} />
+                                )
+                            })}
+                            {
+                                // itemManga[0].character.map((item, index) => (
+                                //     <Character item={item} key={index} showDetailChar={showDetailChar} toggleDetailChar={toggleDetailChar} onClick={() => {
+                                //         setShowDetailChar(index)
+                                //         setToggleDetailChar(!toggleDetailChar)
+                                //     }} />
+                                // ))
+                            }
+                        </div>
+                    </div>                
+                }
+
+                {/* <div className={clsx(styles.relation)}>
                     <Heading primary>Liên quan</Heading>
                     <div className={clsx(styles.listItem)}>
                         <ItemManga setColumn={6} />
@@ -552,27 +747,27 @@ function MangaDetail() {
                         <ItemManga setColumn={6} />
                         <ItemManga setColumn={6} />
                     </div>
-                </div>
+                </div> */}
 
                 <div className={clsx(styles.recommend)}>
                     <Heading primary>Đề xuất dành cho bạn</Heading>
                     <div className={clsx(styles.listItem)}>
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
-                        <ItemManga setColumn={6} />
+                        {dataMangaRecommendConvertToArr.length > 0 && dataMangaRecommendConvertToArr !== undefined &&
+                            dataMangaRecommendConvertToArr.map((item, index) => {
+                                // console.log("filterMangaRecommend", filterMangaRecommend)
+                                // console.log("filterMangaRecommend item", item)
+                                return (
+                                    <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item && item.keyword}/${item && item.id}`} />
+                                )
+                            })
+                        }
                     </div>
                 </div>
 
                 <div className={clsx(styles.comment)}>
                     <Heading primary>Bình luận</Heading>
-                    {dataUserLogin ?
-                        <Comments currentUserId={dataUserLogin.id} />
+                    {LocalUserLogin ?
+                        <Comments currentUserId={LocalUserLogin.id} />
                         :
                         <Comments />
                     }

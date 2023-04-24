@@ -38,6 +38,14 @@ const GlobalContext = React.createContext({
     toggleSidebar: false,
     setToggleSidebar: () => {},
 
+    // toggle menu sidebar in admin layout (info user) 
+    toggleSidebarInfoUser: false,
+    setToggleSidebarInfoUser: () => {},
+
+    // selectedIdCharacter
+    selectedIdCharacter: -1,
+    setSelectedIdCharacter: () => {},
+
 })
 
 export default GlobalContext;

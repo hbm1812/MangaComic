@@ -11,6 +11,7 @@
     align-items: center;
     z-index: 888;
     box-shadow: var(--boxShadowNormal);
+    user-select: none;
 
     .headerLeft {
         line-height: 60px;
@@ -64,4 +65,8 @@
             }
         }
     }
+}
+
+.wrapper.hidden {
+    left: 0;
 }

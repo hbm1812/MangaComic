@@ -29,6 +29,7 @@ import {
     faArrowsDownToLine,
     faTableCellsLarge,
     faArrowsToEye,
+    faCalendar,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -419,6 +420,15 @@ function NewsPaperIcon({ className, onClick }) {
     );
 }
 
+function CalendarIcon({ className, onClick }) {
+    const props = {
+        onClick,
+    };
+    return (
+        <FontAwesomeIcon icon={faCalendar} className={className} {...props} />
+    );
+}
+
 // react icons (fail)
 function FillLayout({ className, onClick, width = "50px", height = "50px" }) {
     const props = {
@@ -491,4 +501,5 @@ export {
     TableCellsLargeIcon,
     ArrowsToEyeIcon,
     NewsPaperIcon,
+    CalendarIcon,
 };

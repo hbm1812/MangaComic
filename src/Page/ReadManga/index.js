@@ -67,10 +67,10 @@ function ReadManga() {
             })
     }, []);
     const findChapterIndex = dataChapter.find((item) => item.id == params.idChapter)
-    // console.log("findChapterIndex", findChapterIndex)    
+    console.log("findChapterIndex", findChapterIndex)    
 
     const filterListChapter = dataChapter.filter((item) => {
-        if (findChapterIndex !== {}) {
+        if (findChapterIndex && findChapterIndex !== {}) {            
             if (selectLanguages === "") {
                 setSelectLanguages(findChapterIndex.languages);
                 return item.languages === findChapterIndex.languages
@@ -120,6 +120,8 @@ function ReadManga() {
         }
     }
 
+    console.log("dataStory", dataStory)
+
     useEffect(() => {
         axios.get(`http://localhost/manga-comic-be/api/stories/getLanguagesInChapter.php?keyword=${params.nameManga}`)
             .then((res) => {
@@ -151,7 +153,7 @@ function ReadManga() {
                         <HouseIcon className={clsx(styles.icon)}
                             onClick={() => {
                                 // return pages home
-                                navigate("/");
+                                navigate(`/manga/detail/${dataStory.length !== 0 && dataStory[0].keyword}/${dataStory.length !== 0 && dataStory[0].id}`);
                             }}
                         />
                         <h3 className={clsx(styles.name)}>{dataStory.length !== 0 && dataStory[0].name}</h3>
@@ -272,7 +274,7 @@ function ReadManga() {
                                         let checkSearchUpperCase = getNameUpperCase.includes(text);
                                         let checkSearchPrimary = getName.includes(text);
 
-                                        if(checkSearchLowerCase || checkSearchUpperCase || checkSearchPrimary) {
+                                        if (checkSearchLowerCase || checkSearchUpperCase || checkSearchPrimary) {
                                             return (
                                                 <Link className={clsx(styles.item)} key={index}
                                                     to={`/manga/read/${item.keyword}/${item.id}`}

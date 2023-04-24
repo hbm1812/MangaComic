@@ -264,13 +264,13 @@
 
 .twoColumn {
     width: 50%;
-    min-width: 210px;
+    min-width: 250px;
 
 }
 
 .threeColumn {
     width: 33.33%;
-    min-width: 210px;
+    min-width: 220px;
 }
 
 .fourColumn {
@@ -294,13 +294,27 @@
 
 .fiveColumn {
     width: 20%;
-    min-width: 210px;
+    min-width: 200px;
 
 }
 
 .sixColumn {
     width: 16.66%;
-    // min-width: 210px;
+    min-width: 190px;
+
+    .itemPrimary {
+        border-top-left-radius: 35px;
+        border-top-right-radius: 35px;
+
+        .info {
+            .infoName {
+                // --webkit-line-clamp: 1 !important;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+        
+    }
 }
 
 // set mode

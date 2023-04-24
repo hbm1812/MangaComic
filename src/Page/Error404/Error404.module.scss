@@ -1,0 +1,23 @@
+.container {
+    background-color: #f2f2f2;
+    color: #444;
+    font-family: Arial, sans-serif;
+    text-align: center;
+
+    h1 {
+        font-weight: bold;
+        font-size: 6em;
+        margin-top: 100px;
+    }
+
+    hr {
+        border: none;
+        border-top: 5px solid #999;
+        margin: 50px auto;
+        width: 50%;
+    }
+
+    p {
+        font-size: 1.5em;
+    }
+}

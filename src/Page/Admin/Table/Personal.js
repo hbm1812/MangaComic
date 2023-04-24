@@ -14,7 +14,7 @@ import Image from "../../../Components/Image";
 import ItemManga from "../../../Components/ItemManga";
 
 function Personal() {
-    const { nameCombobox, setNameCombobox } = useContext(GlobalContext)
+    const { nameCombobox, setNameCombobox, toggleSidebarInfoUser, setToggleSidebarInfoUser } = useContext(GlobalContext)
     const [openModalUpdateUser, setOpenModalUpdateUser] = useState(false);
     const [openModalChangePassword, setOpenModalChangePassword] = useState(false);
     const [dataUpdate, setDataUpdate] = useState({});
@@ -52,6 +52,11 @@ function Personal() {
         password: "",
         confirmPassword: "",
     });
+
+    // check history active 
+    const [viewedActive, setViewedActive] = useState(true);
+    const [favoritedActive, setFavoritedActive] = useState(false);
+    const [followActive, setFollowActive] = useState(false);
 
     const inputs = [
         // {
@@ -93,7 +98,7 @@ function Personal() {
             errorMessage: "Vui lòng nhập mật khẩu 3-20 ký tự",
             pattern: "[A-Za-z0-9_]{3,20}",
             required: true
-        },        
+        },
         {
             id: 6,
             name: "phone",
@@ -349,6 +354,95 @@ function Personal() {
         }
     }
 
+    // handle get stories
+    const [viewStories, setViewStories] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/stories/getViews.php")
+            .then((res) => {
+                // console.log("data Cate", res.data)
+                setViewStories(res.data);
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [])
+    console.log("viewStories", viewStories)
+
+    console.log("dataManga", dataManga);
+    // data viewed
+    const PrepareDataManga = dataManga.reduce((filtered, manga, index) => {
+        // console.log("manga", manga);
+        let getStoriesViewed = dataUser.length > 0 && viewStories.filter(item => dataUser[0].id == item.user_id)
+        // console.log("getAllcategoryInManga", getAllcategoryInManga);
+        getStoriesViewed.map((getItem, index) => {
+            if (getItem.stories_id === manga.id) {
+                console.log("filtered index", filtered)
+                if(filtered.length === 0) {
+                    let man = manga;
+                    filtered.push(man);
+                } else if(filtered.length >= 1) {
+                    let man = manga;
+                    filtered.push(man);
+                    let filterDataRepeat = filtered.filter(item => item.id == manga.id);
+                    if(filterDataRepeat.length > 1) {
+                        for(let i = 0; i < filterDataRepeat.length - 1; i++){
+                            filtered.pop();
+                        }
+                    }
+                    console.log("filterDataRepeat", filterDataRepeat)
+                }                
+            }
+        })
+        return filtered;
+    }, [])
+
+    console.log("PrepareDataManga", PrepareDataManga)
+
+    // handle get stories favorite 
+    const [favoriteStories, setFavoriteStories] = useState([]);
+    useEffect(() => {
+        axios.get("http://localhost/manga-comic-be/api/stories/getFavorite.php")
+            .then((res) => {
+                // console.log("data Cate", res.data)
+                setFavoriteStories(res.data);
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [])
+    // console.log("favoriteStories", favoriteStories)
+
+    // console.log("dataManga", dataManga);
+    // data viewed
+    const PrepareDataMangaFavorite = dataManga.reduce((filtered, manga, index) => {
+        // console.log("manga", manga);
+        let getStoriesViewed = dataUser.length > 0 && favoriteStories.filter(item => dataUser[0].id == item.user_id)
+        // console.log("getAllcategoryInManga", getAllcategoryInManga);
+        getStoriesViewed.map((getItem, index) => {
+            if (getItem.stories_id === manga.id) {
+                console.log("filtered index", filtered)
+                if(filtered.length === 0) {
+                    let man = manga;
+                    filtered.push(man);
+                } else if(filtered.length >= 1) {
+                    let man = manga;
+                    filtered.push(man);
+                    let filterDataRepeat = filtered.filter(item => item.id == manga.id);
+                    if(filterDataRepeat.length > 1) {
+                        for(let i = 0; i < filterDataRepeat.length - 1; i++){
+                            filtered.pop();
+                        }
+                    }
+                    console.log("filterDataRepeat", filterDataRepeat)
+                }                
+            }
+        })
+        return filtered;
+    }, [])
+
+    console.log("PrepareDataMangaFavorite", PrepareDataMangaFavorite)
 
     // console.log("image.preview", image.preview)
     return (
@@ -405,30 +499,70 @@ function Personal() {
                             <div className={clsx(styles.contentMore)}>
                                 <h2>Lịch sử</h2>
                                 <div className={clsx(styles.listHistory)}>
-                                    <Button medium outline>Phim đã xem</Button>
-                                    <Button medium outline>Phim đã thích</Button>
-                                    <Button medium outline>Phim đang theo dõi</Button>
+                                    <Button medium outline
+                                        active={viewedActive}
+                                        onClick={() => {
+                                            setViewedActive(true);
+                                            setFavoritedActive(false);
+                                            setFollowActive(false);
+                                        }}
+                                    >Phim đã xem</Button>
+                                    <Button medium outline
+                                        active={favoritedActive}
+                                        onClick={() => {
+                                            setViewedActive(false);
+                                            setFavoritedActive(true);
+                                            setFollowActive(false);
+                                        }}
+                                    >Phim đã thích</Button>
+                                    <Button medium outline
+                                        active={followActive}
+                                        onClick={() => {
+                                            setViewedActive(false);
+                                            setFavoritedActive(false);
+                                            setFollowActive(true);
+                                        }}
+                                    >Phim đang theo dõi</Button>
                                     {/* <Button medium primary>Hello</Button> */}
                                 </div>
                                 <div className={clsx(styles.listItem)}>
-                                    {dataManga.map((item, index) => {
-                                        // console.log("item detail", item)
-                                        return (
-                                            <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
-                                        )
-                                    })}
-                                    {dataManga.map((item, index) => {
-                                        // console.log("item detail", item)
-                                        return (
-                                            <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
-                                        )
-                                    })}
-                                    {dataManga.map((item, index) => {
-                                        // console.log("item detail", item)
-                                        return (
-                                            <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
-                                        )
-                                    })}
+                                    {viewedActive && PrepareDataManga.length > 0 && PrepareDataManga.map((item, index) => {
+                                        if(toggleSidebarInfoUser) {
+                                            return (
+                                                <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        } else {
+                                            return (
+                                                <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        }                                        
+                                    })}                                                                 
+
+                                    {favoritedActive && PrepareDataMangaFavorite.length > 0 && PrepareDataMangaFavorite.map((item, index) => {
+                                        if(toggleSidebarInfoUser) {
+                                            return (
+                                                <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        } else {
+                                            // console.log("item detail", item)
+                                            return (
+                                                <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        }
+                                    })} 
+
+                                    {followActive && PrepareDataMangaFavorite.length > 0 && PrepareDataMangaFavorite.map((item, index) => {
+                                        if(toggleSidebarInfoUser) {
+                                            return (
+                                                <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        } else {
+                                            // console.log("item detail", item)
+                                            return (
+                                                <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
+                                            )
+                                        }
+                                    })}                                                                                           
                                 </div>
                             </div>
                         </div>

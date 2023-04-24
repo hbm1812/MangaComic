@@ -25,7 +25,7 @@ const MENU_ITEM = [
         to: "/news"
     },
     {
-        icon: <CaretDownIcon />,
+        icon: null,
         title: "BXH",
         to: "/"
     },
