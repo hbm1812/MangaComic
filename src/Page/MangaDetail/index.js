@@ -199,7 +199,7 @@ function MangaDetail() {
             .catch(() => {
                 console.log("error")
             })
-    }, []);
+    }, [params.nameManga]);
 
     const getListChapter = dataChapter.reduce((newArr, item, index) => {
         if (item.languages === selectLanguages) {
