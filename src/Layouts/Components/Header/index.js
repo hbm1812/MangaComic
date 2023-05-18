@@ -27,7 +27,7 @@ const MENU_ITEM = [
     {
         icon: null,
         title: "BXH",
-        to: "/"
+        to: "/ranking"
     },
     {
         icon: <CaretDownIcon />,

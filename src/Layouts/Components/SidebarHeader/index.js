@@ -17,6 +17,7 @@ import Modal from '../../../Components/Modal';
 import FormInput from '../../../Components/FormInput';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { WindowScrollTop } from '../../../util';
 
 function SidebarHeader() {
     const { toggleSidebar, setToggleSidebar } = useContext(GlobalContext);     
@@ -51,7 +52,9 @@ function SidebarHeader() {
                                 }
                             </div>
                             <div className={clsx(styles.headerAvatar)}>
-                                <img src={bgAvatar} alt="" />
+                                <img src={LocalUserLogin && LocalUserLogin.avatar || "https://us.123rf.com/450wm/urfandadashov/urfandadashov1809/urfandadashov180901275/109135379-photo-not-available-vector-icon-isolated-on-transparent-background-photo-not-available-logo-concept.jpg?ver=6"} alt="" 
+                                    style={{borderRadius: "50%"}}
+                                />
                             </div>
                         </div>
                         <div className={clsx(styles.headerListAction)}>
@@ -68,36 +71,57 @@ function SidebarHeader() {
                 </header>
                 <div className={clsx(styles.content)}>
                     <ul className={clsx(styles.contentList)}>
-                        <li className={clsx(styles.contentItem)}><Link to={`/admin`}>
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faUser} className={clsx(styles.contentIcon)} />
                             <p>Trang cá nhân</p>
                         </Link></li>
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faPenToSquare} className={clsx(styles.contentIcon)} />
                             <p>Sửa thông tin</p>
-                        </a></li>
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        </Link></li>
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faUnlock} className={clsx(styles.contentIcon)} />
                             <p>Dổi mật khẩu</p>
-                        </a></li>
+                        </Link></li>
                         <hr />
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faFilm} className={clsx(styles.contentIcon)} />
                             <p>Phim đã xem</p>
-                        </a></li>
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        </Link></li>
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faHeart} className={clsx(styles.contentIcon)} />
                             <p>Phim đã thích</p>
-                        </a></li>
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        </Link></li>
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faBell} className={clsx(styles.contentIcon)} />
                             <p>Phim đang theo dõi</p>
-                        </a></li>
+                        </Link></li>
                         <hr />
-                        <li className={clsx(styles.contentItem)}><a href="">
+                        <li className={clsx(styles.contentItem)} onClick={() => {
+                            WindowScrollTop();
+                            setToggleSidebar(false);
+                        }}><Link to={`/admin/Personal`}>
                             <FontAwesomeIcon icon={faLightbulb} className={clsx(styles.contentIcon)} />
                             <p>Dark mode</p>
-                        </a></li>
+                        </Link></li>
                         {LocalUserLogin &&
                             <Fragment>
                                 <hr />

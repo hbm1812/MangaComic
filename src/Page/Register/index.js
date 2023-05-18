@@ -89,39 +89,34 @@ function Register() {
         data.append("avatar", "")        
 
 
-        let checkBool = true;
-        // listUsers.find((item) => {
-        //     if (item.username === values.username) {
-        //         console.log("tài khoản đã tồn tại");
-        //         checkBool = false;
-        //         handleCloseModal();
-        //         handleToastNotify();
-        //         setTypeNotify("error");
-        //     }
-        // })
-
-        if (checkBool) {
-            axios({
-                method: "POST",
-                url: "http://localhost/manga-comic-be/api/users/register.php",
-                data: data,
-                headers: { "Content-Type": "multipart/form-data" },
+        axios({
+            method: "POST",
+            url: "http://localhost/manga-comic-be/api/users/register.php",
+            data: data,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then((res) => {
+                console.log("res.data", res.data);
+                if(res.data[0] === "success") {
+                    alert("Đăng ký thành công");
+                    navigate("/login");
+                } else if (res.data[0] === "fail") {
+                    alert("Tài khoản đã tồn tại");     
+                    setValues({
+                        username: "",
+                        email: "",
+                        password: "",
+                        confirmPassword: "",
+                    })               
+                }
+                console.log("success");
             })
-                .then(() => {
-                    console.log("success");
-                    checkBool = false;
-                    // handleCloseModal();
-                    // handleToastNotify();
-                    // setTypeNotify("success");
-                    // resetValueCreate();
-                })
-                .catch(() => {
-                    console.log("error");
-                })
-        }
+            .catch(() => {
+                console.log("error");
+            })
 
-        // console.log(data);
-        // console.log(Object.fromEntries(data.entries()))
+        console.log(data);
+        console.log(Object.fromEntries(data.entries()))
 
         // console.log("hi");
         // console.log(values.username);

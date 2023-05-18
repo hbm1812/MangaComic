@@ -1,5 +1,24 @@
 .wrapperPrimary {
     width: 25%;
+    position: relative;
+
+    .rankingIndex {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        font-size: 36px;
+        font-weight: 600;
+        display: inline-block;
+        padding: 5px 20px 15px;
+        background-color: var(--primary);
+        color: var(--white);
+        text-decoration: none;
+        border-radius: 5px;
+        user-select: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--boxShadowNormal);
+        clip-path: polygon(0 0, 50% 0, 100% 0, 100% 41%, 100% 100%, 50% 85%, 0 100%);
+    }
 
     .itemPrimary {
         // width: calc(100% - 10px);
@@ -87,7 +106,7 @@
             text-align: center;
             opacity: 1;
             transition: all linear 0.25s;
-        }
+        }        
 
         .itemPlay {
             position: absolute;
@@ -276,7 +295,7 @@
 .fourColumn {
     width: 25%;
     min-width: 210px;
-    
+
     .itemPrimary {
         border-top-left-radius: 35px;
         border-top-right-radius: 35px;
@@ -288,7 +307,7 @@
                 white-space: nowrap;
             }
         }
-        
+
     }
 }
 
@@ -313,7 +332,7 @@
                 white-space: nowrap;
             }
         }
-        
+
     }
 }
 

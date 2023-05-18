@@ -296,7 +296,7 @@ function Users() {
             console.log("dataupdate", dataUpdate);
             for (let key in dataUpdate) {
                 console.log("key", key);
-                if (key.toString() === "avatar") {
+                if (key.toString() === "avatar") {                    
                     data.append(key.toString(), image)
                 } else if(key.toString() === "role_name") {
                     listRoles.find((item) => {
@@ -310,8 +310,8 @@ function Users() {
                     data.append(key.toString(), dataUpdate[key])
                 }
             }
-            // console.log("data:", data);
-            // console.log("data entry:", Object.fromEntries(data.entries()))
+            console.log("data:", data);
+            console.log("data entry:", Object.fromEntries(data.entries()))
 
         }
 

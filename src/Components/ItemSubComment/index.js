@@ -17,7 +17,7 @@ import Image from "../Image";
 
 
 function ItemSubComment({ data, currentUserId }) {
-    const { fetchApiComment, setFetchApiComment } = useContext(GlobalContext);
+    const { fetchApiComment, setFetchApiComment, showInputClone, setShowInputClone, saveImageSubComment, setSaveImageSubComment } = useContext(GlobalContext);
     const [showInputComment, setShowInputComment] = useState(false);
     const [activeUser, setActiveUser] = useState(false);
     const param = useParams();
@@ -47,7 +47,6 @@ function ItemSubComment({ data, currentUserId }) {
         var canEdit = currentUserId === data.user_id;
         var canDelete = currentUserId === data.user_id;
     }
-
     // handle delete comment 
     const handleClickBtnDelete = (item) => {
         setShowModalDelete(true);
@@ -70,6 +69,8 @@ function ItemSubComment({ data, currentUserId }) {
                 console.log("success");
                 setFetchApiComment(!fetchApiComment);
                 setShowModalDelete(false);
+                setShowInputClone(false);
+                setSaveImageSubComment("");
             })
             .catch(() => {
                 console.log("error");
@@ -86,9 +87,10 @@ function ItemSubComment({ data, currentUserId }) {
         // console.log("data.parent_id", data.parent_id)
 
         data.append("user_id", currentUserId);
-        data.append("news_id", param.newsId);
+        { param.newsId && data.append("news_id", param.newsId) };
+        { param.idManga && data.append("story_id", param.idManga) };
         data.append("parent_id", dataReply.parent_id);
-        data.append("thumbnail", "");
+        data.append("thumbnail", saveImageSubComment);
         data.append("content", `@${dataReply.name}` + " " + text)
 
         axios({
@@ -100,6 +102,8 @@ function ItemSubComment({ data, currentUserId }) {
             .then(() => {
                 console.log("success");
                 setFetchApiComment(!fetchApiComment);
+                setShowInputClone(false);
+                setSaveImageSubComment("");
             })
             .catch(() => {
                 console.log("error");
@@ -116,9 +120,10 @@ function ItemSubComment({ data, currentUserId }) {
 
         data.append("id", currentId)
         data.append("user_id", currentUserId);
-        data.append("news_id", param.newsId);
+        { param.newsId && data.append("news_id", param.newsId) };
+        { param.idManga && data.append("story_id", param.idManga) };
         data.append("parent_id", dataEdit.parent_id);
-        data.append("thumbnail", "");
+        data.append("thumbnail", saveImageSubComment);
         data.append("content", text);
 
         axios({
@@ -130,22 +135,24 @@ function ItemSubComment({ data, currentUserId }) {
             .then(() => {
                 console.log("success");
                 setFetchApiComment(!fetchApiComment);
+                setShowInputClone(false);
+                setSaveImageSubComment("");
             })
             .catch(() => {
                 console.log("error");
-            })        
+            })
     }
 
     return (
         <div className={clsx(styles.item)}
             onClick={() => {
-                setShowInputComment(false);
+                setShowInputComment(false);                
             }}
         >
             <header className={clsx(styles.itemHeader)}>
                 <div className={clsx(styles.itemInfoUser)}>
                     <div className={clsx(styles.itemAvatar)}>
-                        <Image src={data && data.user_avatar || ""}/>
+                        <Image src={data && data.user_avatar || ""} />
                         {/* <img src={data && data.user_avatar || ""} alt="" /> */}
                     </div>
                     <div className={clsx(styles.itemInfo)}>
@@ -197,6 +204,7 @@ function ItemSubComment({ data, currentUserId }) {
                             setCheckTypeBtn("Reply");
                             setShowInputComment(!showInputComment);
                             setDataReply(data);
+                            setShowInputClone(true);
                         }}
                     >Reply</Button>
                 }
@@ -206,6 +214,7 @@ function ItemSubComment({ data, currentUserId }) {
                             setCheckTypeBtn("Edit");
                             setShowInputComment(!showInputComment);
                             setDataEdit(data);
+                            setShowInputClone(true);
                             console.log("dataEdit", data);
                         }}
                     >Edit</Button>
@@ -230,6 +239,7 @@ function ItemSubComment({ data, currentUserId }) {
                             parentId={data.id}
                             close={() => {
                                 setShowInputComment(false);
+                                setShowInputClone(true);
                             }}
                         />
                         : checkTypeBtn === "Edit" ?
@@ -239,6 +249,8 @@ function ItemSubComment({ data, currentUserId }) {
                                 currentId={data.id}
                                 close={() => {
                                     setShowInputComment(false);
+                                    setShowInputClone(true);
+
                                 }}
                             />
                             : <Fragment />

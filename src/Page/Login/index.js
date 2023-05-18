@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import Button from "../../Components/Button";
 import styles from "./Login.module.scss";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +11,7 @@ import request, { post } from "../../util/request";
 import isEmpty from "validator/lib/isEmpty";
 import Image from "../../Components/Image";
 import FormInput from "../../Components/FormInput";
-import { UploadIcon } from "../../Components/Icon";
 import axios from "axios";
-import GlobalContext from "../../Contexts/GlobalContext";
 
 
 function Login() {
@@ -23,7 +21,6 @@ function Login() {
         username: "",
         password: "",
     });
-    const [listUsers, setListUsers] = useState([]);
     // console.log("listUsers", listUsers);
     const inputs = [
         {
@@ -46,71 +43,81 @@ function Login() {
             pattern: "[A-Za-z0-9_]{3,20}",
             required: true
         },
-    ];
-
-    useEffect(() => {
-        axios.get("http://localhost/manga-comic-be/api/users/read.php")
-            .then((res) => {
-                // console.log("data", res.data)
-                setListUsers(res.data);
-            })
-
-            .catch(() => {
-                console.log("error")
-                
-            })
-    }, [])
+    ];    
 
     const onHandleSubmit = (e) => {
-        e.preventDefault();   
+        e.preventDefault();
+        const data = new FormData(e.target);
 
-        console.log("values", values)
-        
-        let filter = listUsers.filter(item => item.username === values.username && item.password === values.password)
-        console.log("filter", filter);
+        data.append("username", values.username);
+        data.append("password", values.password);
 
-        if(filter.length > 0 ) {
-            const jsonUser = JSON.stringify(filter[0]);
-            localStorage.setItem("DataUser", jsonUser);
-            navigate("/")
-        }
+        axios({
+            method: "POST",
+            url: "http://localhost/manga-comic-be/api/users/login.php",
+            data: data,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then((res) => res.data)
+            .then((resData) => {
+                console.log("resData", resData)
+                if(resData.length === 0) {
+                    alert("Sai tài khoản hoặc mật khẩu!")
+                    setValues({
+                        username: "",
+                        password: "",
+                    })
+                    return;
+                }                
+
+                const jsonUser = JSON.stringify(resData[0]);
+                localStorage.setItem("DataUser", jsonUser);
+                navigate("/")
+                console.log("success");
+            })
+            .catch(() => {
+                console.log("error");
+            })
+
     }
 
     const onChangeInput = (e) => {
         // e.target.name lấy key trong obj
         // e.target.value lấy giá trị trong obj
         setValues({ ...values, [e.target.name]: e.target.value })
-    }    
+    }
 
     return (
-        <div className={clsx(styles.container)}>
-            <form className={clsx(styles.wrapper)}
-                onSubmit={onHandleSubmit}
-            >
-                <div className={clsx(styles.header)}>
-                    Login
-                </div>
-                {inputs.map((item, index) => {
-                    return (
-                        <FormInput
-                            key={index}
-                            value={values[item.name]}
-                            onChange={onChangeInput}
-                            {...item}
-                        />
+        <Fragment>
+            <div className={clsx(styles.container)}>
+                <form className={clsx(styles.wrapper)}
+                    onSubmit={onHandleSubmit}
+                >
+                    <div className={clsx(styles.header)}>
+                        Login
+                    </div>
+                    {inputs.map((item, index) => {
+                        return (
+                            <FormInput
+                                key={index}
+                                value={values[item.name]}
+                                onChange={onChangeInput}
+                                {...item}
+                            />
 
-                    )
-                })}
-                <Button primary large>Login</Button>
-                {/* <Button iconLeft={<UploadIcon/>} transparent large>Login with Google</Button>                 */}
-                <div className={clsx(styles.register)}>
-                    Don't have an account? 
-                    <span
-                        onClick={() => navigate("/register")}
-                    >Register now!</span>
-                </div>
-            </form>
-        </div>
+                        )
+                    })}
+                    <Button primary large>Login</Button>
+                    {/* <Button iconLeft={<UploadIcon/>} transparent large>Login with Google</Button>                 */}
+                    <div className={clsx(styles.register)}>
+                        Don't have an account?
+                        <span
+                            onClick={() => navigate("/register")}
+                        >Register now!</span>
+                    </div>
+                </form>
+            </div>            
+        </Fragment>
     );
 }
 

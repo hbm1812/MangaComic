@@ -12,7 +12,9 @@ import GlobalContext from "../../Contexts/GlobalContext";
 
 function InputComment({ handleSubmit, parentId, close, currentId, clone, resetImage }) {
     // console.log("inp parrent id", parentId);
-    const { dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
+    const { saveImageSubComment, setSaveImageSubComment } = useContext(GlobalContext);
+    const LocalUserLogin = JSON.parse(localStorage.getItem("DataUser")) ?? null;
+    console.log("LocalUserLogin", LocalUserLogin)
     const [text, setText] = useState("");
     const [showEmoji, setShowEmoji] = useState(false);
     // handle image
@@ -23,10 +25,9 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
     // if(resetImage) {
     //     setImage("");
     // }
-
     const onSubmit = (e) => {
         e.preventDefault();
-        if (!dataUserLogin) {
+        if (!LocalUserLogin) {
             alert("bạn phải đăng nhập mới có thể bình luận");
         }
         handleSubmit(text, parentId ?? null, e, currentId, image ?? null)
@@ -49,6 +50,7 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
         file.preview = URL.createObjectURL(file);
         setImage(file);
         setShowModalImage(true);
+        setSaveImageSubComment(file)
         // console.log("select file", file);
         // console.log("showModalImage", showModalImage);
         // console.log("image", image);
@@ -77,15 +79,15 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
             <form onSubmit={() => { }}>
                 <textarea className={clsx(styles.inputWrap)}
                     value={text}
-                    onChange={() => {}}
+                    onChange={() => { }}
                     placeholder="Nhập bình luận của bạn"
-                />                
+                />
                 <div className={clsx(styles.yourAction)}>
                     <div className={clsx(styles.extend)}>
                         <EmojiIcon
                             className={clsx(styles.emojiIcon)}
-                            onClick={() => {}}
-                        />                        
+                            onClick={() => { }}
+                        />
                         <label style={{ display: "inline-block" }}>
                             <AddImageIcon
                                 className={clsx(styles.imageIcon)}
@@ -93,7 +95,7 @@ function InputComment({ handleSubmit, parentId, close, currentId, clone, resetIm
                                     // image && URL.revokeObjectURL(image.preview);
                                 }}
                             />
-                        </label>                        
+                        </label>
                     </div>
                     <Button primary disabled>
                         Gửi

@@ -67,7 +67,7 @@ function ReadManga() {
             })
     }, []);
     const findChapterIndex = dataChapter.find((item) => item.id == params.idChapter)
-    console.log("findChapterIndex", findChapterIndex)    
+    // console.log("findChapterIndex", findChapterIndex)    
 
     const filterListChapter = dataChapter.filter((item) => {
         if (findChapterIndex && findChapterIndex !== {}) {            
@@ -120,7 +120,7 @@ function ReadManga() {
         }
     }
 
-    console.log("dataStory", dataStory)
+    // console.log("dataStory", dataStory)
 
     useEffect(() => {
         axios.get(`http://localhost/manga-comic-be/api/stories/getLanguagesInChapter.php?keyword=${params.nameManga}`)
@@ -253,9 +253,26 @@ function ReadManga() {
                             <Fragment>
                                 {filterListChapter.length !== 0 &&
                                     filterListChapter.map((item, index) => {
+                                        // console.log("dataChapter", dataChapter)
+                                        // console.log("itemitem", item)                                        
                                         return (
                                             <Link className={clsx(styles.item)} key={index}
                                                 to={`/manga/read/${item.keyword}/${item.id}`}
+                                                onClick={() => {
+                                                    WindowScrollTop();
+                                                    if(item.chapter_index === dataChapter[0].chapter_index) {
+                                                        // console.log("chapter start")
+                                                        setShowBtnDisablePrev(true);
+                                                        setShowBtnDisableNext(false);
+                                                    } else if(item.chapter_index === dataChapter[dataChapter.length - 1].chapter_index) {
+                                                        // console.log("chapter end")
+                                                        setShowBtnDisablePrev(false);
+                                                        setShowBtnDisableNext(true);
+                                                    } else {
+                                                        setShowBtnDisablePrev(false);
+                                                        setShowBtnDisableNext(false);
+                                                    }
+                                                }}
                                             >
                                                 <span>{item.name}</span>
                                             </Link>
@@ -274,10 +291,15 @@ function ReadManga() {
                                         let checkSearchUpperCase = getNameUpperCase.includes(text);
                                         let checkSearchPrimary = getName.includes(text);
 
+                                        // console.log("itemitem", item)
+
                                         if (checkSearchLowerCase || checkSearchUpperCase || checkSearchPrimary) {
                                             return (
                                                 <Link className={clsx(styles.item)} key={index}
                                                     to={`/manga/read/${item.keyword}/${item.id}`}
+                                                    onClick={() => {
+                                                        WindowScrollTop();
+                                                    }}
                                                 >
                                                     <span>{item.name}</span>
                                                 </Link>

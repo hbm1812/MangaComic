@@ -27,6 +27,7 @@ import supernatualImg from "../../assets/images/genres/supernatual.jpg";
 import yuriImg from "../../assets/images/genres/yuri.jpg";
 import Search from "../../Components/Search";
 import { SearchIcon } from "../../Components/Icon";
+import GlobalContext from "../../Contexts/GlobalContext";
 
 
 const GENRES_ITEM = [
@@ -676,6 +677,7 @@ const DATA_MANGA = [
 ]
 
 export default function Manga() {
+    const { saveNameStatus, saveCategory, setSaveNameStatus, setSaveCategory } = useContext(GlobalContext)
     // route dom
     const params = useParams();
     // console.log(params.mangaId);
@@ -687,12 +689,10 @@ export default function Manga() {
     const [dataManga, setDataManga] = useState([]);
     // load data from fetch api
     const [dataMangaAll, setDataMangaAll] = useState([]);
-    const [dataCategoryInManga, setDataCategoryInManga] = useState([]);    
+    const [dataCategoryInManga, setDataCategoryInManga] = useState([]);
 
     // get data stories 
     const [dataStatus, setDataStatus] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState("");
-    console.log("selectedStatus", selectedStatus)    
 
     useEffect(() => {
         axios.get("http://localhost/manga-comic-be/api/stories/getcategory.php")
@@ -734,7 +734,7 @@ export default function Manga() {
             })
     }, []);
 
-    const PrepareDataManga = (selectedStatus) => {
+    const PrepareDataManga = () => {
         setDataManga(dataMangaAll.reduce((filtered, manga, index) => {
             // console.log("manga", manga);
             let getAllcategoryInManga = dataCategoryInManga.filter((item) => item.story_id === manga.id)
@@ -742,8 +742,8 @@ export default function Manga() {
             if (filtered.length < numberRender) {
                 getAllcategoryInManga.map((getItem, index) => {
                     // console.log("getItem", getItem)
-                    if (getItem.keyword === keyGenres) {                        
-                        let man = manga;                                            
+                    if (getItem.keyword === keyGenres) {
+                        let man = manga;
                         filtered.push(man);
                     }
                 })
@@ -753,7 +753,7 @@ export default function Manga() {
     }
 
     useEffect(() => {
-        PrepareDataManga(selectedStatus);
+        PrepareDataManga();
 
         return () => { }
     }, [keyGenres, numberRender])
@@ -769,6 +769,26 @@ export default function Manga() {
                 console.log("error")
             })
     }, []);
+
+    const [dataMangaSearch, setDataMangaSearch] = useState([]);
+    const [checkSearch, setCheckSearch] = useState(false);
+
+    // Search data manga with name status
+    useEffect(() => {
+        axios.get(`http://localhost/manga-comic-be/api/stories/findStoriesDetail.php?name_status=${saveNameStatus}&name_cate=${saveCategory}`)
+            .then((res) => {
+                setDataMangaSearch(res.data)
+            })
+
+            .catch(() => {
+                console.log("error")
+            })
+    }, [checkSearch]);
+
+    // console.log("saveNameStatus", saveNameStatus);
+    // console.log("saveCategory", saveCategory);
+
+    // console.log("dataMangaSearch", dataMangaSearch);
 
     return (
         <Fragment>
@@ -798,11 +818,17 @@ export default function Manga() {
                         )
                     })}
                 </div>
-                {/* search */}                
-                <Search data={dataStatus} type="status"/>
-                <Link className={clsx(styles.search)} to={`${params.mangaId}&adu`}
+                {/* search */}
+                <Search data={dataStatus} type="status" />
+                <Search data={dataCategory} type="category" />
+                <Link className={clsx(styles.search)} to={`/manga`}
                     onClick={() => {
-                        setSelectedStatus("adu");
+                        // ${params.mangaId}&adu
+                        setHeadingGenres("All manga");
+                        setCheckSearch(!checkSearch);
+                        // setSaveNameStatus("");
+                        // setSaveCategory("");
+
                     }}
                 >
                     <SearchIcon className={clsx(styles.icon)} />
@@ -814,7 +840,7 @@ export default function Manga() {
                             <Heading>{headingGenres}</Heading>
                             <div className={clsx(styles.wrapper)}>
                                 {
-                                    dataMangaAll.map((item, index) => {
+                                    dataMangaSearch.length !== 0 && dataMangaSearch.map((item, index) => {
                                         return (
                                             <ItemManga setColumn={6} key={index} data={item} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                         )
@@ -822,7 +848,7 @@ export default function Manga() {
                                 }
                             </div>
                         </div>
-                        {dataMangaAll.length != 0 ?
+                        {dataMangaSearch.length !== 0 ?
                             <div className={clsx(styles.viewMore)}>
                                 <Button primary medium onClick={() => {
                                     setNumberRender(numberRender + 6);
@@ -836,6 +862,21 @@ export default function Manga() {
                                 <img src="https://www.sciener.my/wp-content/uploads/2018/10/scienerc-404-error-.png" alt="" />
                             </div>
                         }
+
+                        {/* {dataMangaAll.length != 0 ?
+                            <div className={clsx(styles.viewMore)}>
+                                <Button primary medium onClick={() => {
+                                    setNumberRender(numberRender + 6);
+                                }}>Xem thêm</Button>
+                            </div>
+                            :
+                            <div className={clsx(styles.error)}>
+                                <div className={clsx(styles.chatBox)}>
+                                    <p>Chưa có gì cho thể loại này</p>
+                                </div>
+                                <img src="https://www.sciener.my/wp-content/uploads/2018/10/scienerc-404-error-.png" alt="" />
+                            </div>
+                        } */}
                     </Fragment>
                     :
                     <Fragment>

@@ -1,0 +1,12 @@
+.wrapper {
+    color: #fff;
+    margin: 0 60px;
+    padding: 15px 0;
+
+    .listItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+}

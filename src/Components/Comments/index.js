@@ -13,14 +13,14 @@ import GlobalContext from "../../Contexts/GlobalContext";
 
 function Comments({ currentUserId }) {
     const navigate = useNavigate();
-    const { fetchApiComment, setFetchApiComment } = useContext(GlobalContext);
+    const { fetchApiComment, setFetchApiComment, showInputClone, setShowInputClone } = useContext(GlobalContext);
 
     const [dataComments, setDataComments] = useState([]);
-
+    console.log("dataComments", dataComments)
     // handle fullscreen image 
     const [showFullScreen, setShowFullScreen] = useState(false);
     const [dataImage, setDataImage] = useState({});
-    const [showInputClone, setShowInputClone] = useState(false);
+    // const [showInputClone, setShowInputClone] = useState(false);
     const [showModalIsSubComment, setShowModalIsSubComment] = useState(false);
     // custom
     const [showInputComment, setShowInputComment] = useState(false);

@@ -299,7 +299,7 @@ function Personal() {
         const data = new FormData(e.target);
 
         if (dataUpdate && dataUpdate !== {}) {
-            console.log("dataupdate", dataUpdate);
+            // console.log("dataupdate", dataUpdate);
             for (let key in dataUpdate) {
                 console.log("key", key);
 
@@ -317,42 +317,38 @@ function Personal() {
                     data.append(key.toString(), dataUpdate[key])
                 }
             }
-            // console.log("data:", data);
-            // console.log("data entry:", Object.fromEntries(data.entries()))            
+                       
         }
 
+        
 
-        let checkBool = true;
-        // listUsers.find((item) => {
-        //     if (item.username === dataUpdate.username) {
-        //         console.log("tài khoản đã tồn tại");
-        //         checkBool = false;
-        //         handleCloseModalUpdateUser();
-        //         handleToastNotify();
-        //         setTypeNotify("error");
-        //     }
-        // })
-
-        if (checkBool) {
-            axios({
-                method: "POST",
-                url: "http://localhost/manga-comic-be/api/users/update.php",
-                data: data,
-                headers: { "Content-Type": "multipart/form-data" },
+        axios({
+            method: "POST",
+            url: "http://localhost/manga-comic-be/api/users/update.php",
+            data: data,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then(() => {
+                console.log("success");
+                handleCloseModalChangePassword(false)
+                handleCloseModalUpdateUser();
+                handleToastNotify();
+                setTypeNotify("update");
+                setValues({
+                    // oldPassword: "",
+                    password: "",
+                    confirmPassword: "",
+                })
             })
-                .then(() => {
-                    console.log("success");
-                    checkBool = false;
-                    handleCloseModalChangePassword(false)
-                    handleCloseModalUpdateUser();
-                    handleToastNotify();
-                    setTypeNotify("update");
-                })
-                .catch(() => {
-                    console.log("error");
-                })
-        }
+            .catch(() => {
+                console.log("error");
+            })
+
+        console.log("data:", data);
+        console.log("data entry:", Object.fromEntries(data.entries()))
     }
+
+    console.log("values", values)    
 
     // handle get stories
     const [viewStories, setViewStories] = useState([]);
@@ -367,37 +363,37 @@ function Personal() {
                 console.log("error")
             })
     }, [])
-    console.log("viewStories", viewStories)
+    // console.log("viewStories", viewStories)
 
-    console.log("dataManga", dataManga);
+    // console.log("dataManga", dataManga);
     // data viewed
     const PrepareDataManga = dataManga.reduce((filtered, manga, index) => {
         // console.log("manga", manga);
         let getStoriesViewed = dataUser.length > 0 && viewStories.filter(item => dataUser[0].id == item.user_id)
         // console.log("getAllcategoryInManga", getAllcategoryInManga);
-        getStoriesViewed.map((getItem, index) => {
+        getStoriesViewed.length > 0 && getStoriesViewed.map((getItem, index) => {
             if (getItem.stories_id === manga.id) {
-                console.log("filtered index", filtered)
-                if(filtered.length === 0) {
+                // console.log("filtered index", filtered)
+                if (filtered.length === 0) {
                     let man = manga;
                     filtered.push(man);
-                } else if(filtered.length >= 1) {
+                } else if (filtered.length >= 1) {
                     let man = manga;
                     filtered.push(man);
                     let filterDataRepeat = filtered.filter(item => item.id == manga.id);
-                    if(filterDataRepeat.length > 1) {
-                        for(let i = 0; i < filterDataRepeat.length - 1; i++){
+                    if (filterDataRepeat.length > 1) {
+                        for (let i = 0; i < filterDataRepeat.length - 1; i++) {
                             filtered.pop();
                         }
                     }
-                    console.log("filterDataRepeat", filterDataRepeat)
-                }                
+                    // console.log("filterDataRepeat", filterDataRepeat)
+                }
             }
         })
         return filtered;
     }, [])
 
-    console.log("PrepareDataManga", PrepareDataManga)
+    // console.log("PrepareDataManga", PrepareDataManga)
 
     // handle get stories favorite 
     const [favoriteStories, setFavoriteStories] = useState([]);
@@ -420,29 +416,29 @@ function Personal() {
         // console.log("manga", manga);
         let getStoriesViewed = dataUser.length > 0 && favoriteStories.filter(item => dataUser[0].id == item.user_id)
         // console.log("getAllcategoryInManga", getAllcategoryInManga);
-        getStoriesViewed.map((getItem, index) => {
+        getStoriesViewed.length > 0 && getStoriesViewed.map((getItem, index) => {
             if (getItem.stories_id === manga.id) {
-                console.log("filtered index", filtered)
-                if(filtered.length === 0) {
+                // console.log("filtered index", filtered)
+                if (filtered.length === 0) {
                     let man = manga;
                     filtered.push(man);
-                } else if(filtered.length >= 1) {
+                } else if (filtered.length >= 1) {
                     let man = manga;
                     filtered.push(man);
                     let filterDataRepeat = filtered.filter(item => item.id == manga.id);
-                    if(filterDataRepeat.length > 1) {
-                        for(let i = 0; i < filterDataRepeat.length - 1; i++){
+                    if (filterDataRepeat.length > 1) {
+                        for (let i = 0; i < filterDataRepeat.length - 1; i++) {
                             filtered.pop();
                         }
                     }
-                    console.log("filterDataRepeat", filterDataRepeat)
-                }                
+                    // console.log("filterDataRepeat", filterDataRepeat)
+                }
             }
         })
         return filtered;
     }, [])
 
-    console.log("PrepareDataMangaFavorite", PrepareDataMangaFavorite)
+    // console.log("PrepareDataMangaFavorite", PrepareDataMangaFavorite)
 
     // console.log("image.preview", image.preview)
     return (
@@ -506,7 +502,7 @@ function Personal() {
                                             setFavoritedActive(false);
                                             setFollowActive(false);
                                         }}
-                                    >Phim đã xem</Button>
+                                    >Truyện đã xem</Button>
                                     <Button medium outline
                                         active={favoritedActive}
                                         onClick={() => {
@@ -514,7 +510,7 @@ function Personal() {
                                             setFavoritedActive(true);
                                             setFollowActive(false);
                                         }}
-                                    >Phim đã thích</Button>
+                                    >Truyện đã thích</Button>
                                     <Button medium outline
                                         active={followActive}
                                         onClick={() => {
@@ -522,12 +518,12 @@ function Personal() {
                                             setFavoritedActive(false);
                                             setFollowActive(true);
                                         }}
-                                    >Phim đang theo dõi</Button>
+                                    >Truyện đang theo dõi</Button>
                                     {/* <Button medium primary>Hello</Button> */}
                                 </div>
                                 <div className={clsx(styles.listItem)}>
                                     {viewedActive && PrepareDataManga.length > 0 && PrepareDataManga.map((item, index) => {
-                                        if(toggleSidebarInfoUser) {
+                                        if (toggleSidebarInfoUser) {
                                             return (
                                                 <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
@@ -535,11 +531,11 @@ function Personal() {
                                             return (
                                                 <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
-                                        }                                        
-                                    })}                                                                 
+                                        }
+                                    })}
 
                                     {favoritedActive && PrepareDataMangaFavorite.length > 0 && PrepareDataMangaFavorite.map((item, index) => {
-                                        if(toggleSidebarInfoUser) {
+                                        if (toggleSidebarInfoUser) {
                                             return (
                                                 <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
@@ -549,10 +545,10 @@ function Personal() {
                                                 <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
                                         }
-                                    })} 
+                                    })}
 
                                     {followActive && PrepareDataMangaFavorite.length > 0 && PrepareDataMangaFavorite.map((item, index) => {
-                                        if(toggleSidebarInfoUser) {
+                                        if (toggleSidebarInfoUser) {
                                             return (
                                                 <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
@@ -562,7 +558,7 @@ function Personal() {
                                                 <ItemManga setColumn={4} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                             )
                                         }
-                                    })}                                                                                           
+                                    })}
                                 </div>
                             </div>
                         </div>

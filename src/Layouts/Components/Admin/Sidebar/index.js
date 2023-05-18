@@ -2,8 +2,9 @@ import clsx from "clsx";
 import styles from "./Sidebar.module.scss";
 import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { CalendarIcon, HouseIcon, NewsPaperIcon, TableCellsLargeIcon, UserIcon, XmarkIcon } from "../../../../Components/Icon";
+import { CalendarIcon, HouseIcon, NewsPaperIcon, PowerOffIcon, TableCellsLargeIcon, UserIcon, XmarkIcon } from "../../../../Components/Icon";
 import GlobalContext from "../../../../Contexts/GlobalContext";
+import { WindowScrollTop } from "../../../../util";
 
 const dataLink = [
     {
@@ -30,27 +31,23 @@ const dataLink = [
         title: "Apps",
         links: [
             {
-                to: "calendar",
-                name: "Lịch",
-                icon: <CalendarIcon />
-            },
-            {
                 to: "/",
                 name: "Manga Comic",
                 icon: <HouseIcon />
             },
-            // {
-            //     to: "table",
-            //     name: "orders",
-            //     icon: <XmarkIcon />
-            // },
+            {
+                to: "calendar",
+                name: "Lịch",
+                icon: <CalendarIcon />
+            }
         ]
-    }    
+    }
 ]
 
 function Sidebar() {
     const { toggleSidebarInfoUser, setToggleSidebarInfoUser } = useContext(GlobalContext)
-    
+    const LocalUserLogin = JSON.parse(localStorage.getItem("DataUser")) ?? null;
+
     return (
         <div className={clsx(styles.wrapper, {
             [styles.hidden]: toggleSidebarInfoUser
@@ -62,22 +59,26 @@ function Sidebar() {
                     </div>
                     <p className={clsx(styles.nameLogo)}>Welcome</p>
                 </Link>
-                <XmarkIcon className={clsx(styles.closeIcon)} 
+                <XmarkIcon className={clsx(styles.closeIcon)}
                     onClick={() => setToggleSidebarInfoUser(!toggleSidebarInfoUser)}
                 />
             </div>
             <div className={clsx(styles.menu)}>
                 {dataLink.map((item, index) => {
                     return (
-                        <div className={clsx(styles.item)} key={index}>
+                        <div className={clsx(styles.item)} key={index} >
                             <p className={clsx(styles.title)}>
                                 {item.title}
                             </p>
                             <ul className={clsx(styles.subMenu)}>
                                 {item.links.map((item, index) => {
-                                    if(item.to == "/") {
+                                    if (item.to == "/") {
                                         return (
-                                            <li className={clsx(styles.subItem)} key={index}>
+                                            <li className={clsx(styles.subItem)} key={index}
+                                                onClick={() => {
+                                                    WindowScrollTop()
+                                                }}
+                                            >
                                                 <Link to={`${item.to}`} className={clsx(styles.navLink)}>
                                                     <span className={clsx(styles.subItemIcon)}>
                                                         {item.icon}
@@ -89,7 +90,9 @@ function Sidebar() {
                                     }
 
                                     return (
-                                        <li className={clsx(styles.subItem)} key={index}>
+                                        <li className={clsx(styles.subItem)} key={index} onClick={() => {
+                                            WindowScrollTop()
+                                        }}>
                                             <Link to={`/admin/${item.to}`} className={clsx(styles.navLink)}>
                                                 <span className={clsx(styles.subItemIcon)}>
                                                     {item.icon}

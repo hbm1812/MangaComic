@@ -15,9 +15,11 @@ export default function NewsDetail() {
     const navigate = useNavigate();
     const params = useParams();
     // console.log("param", params);
-    const { newsDetail, setNewsDetail, dataUserLogin, setDataUserLogin } = useContext(GlobalContext);
+    const { newsDetail, setNewsDetail } = useContext(GlobalContext);
     // console.log("newdt", newsDetail)
     const [category, setCategory] = useState(newsDetail.key_category ?? "");
+    const LocalUserLogin = JSON.parse(localStorage.getItem("DataUser")) ?? null;
+    console.log("LocalUserLogin", LocalUserLogin)
 
     const getData = async () => {
         const respon = await axios.get(`http://localhost/manga-comic-be/api/news/showNewDetail.php?id=${params.newsId}`);
@@ -48,6 +50,8 @@ export default function NewsDetail() {
         var getTime = arrDateCreated[0].split("-").reverse().join("/");
     }
 
+    // console.log("dataUserLogin", dataUserLogin)
+
     return (
         <Fragment>
             <section className={clsx(styles.wrapper)}>
@@ -75,8 +79,8 @@ export default function NewsDetail() {
 
                         <Heading>Bình luận</Heading>
                         {/* currentUserId sau truyền id ng dùng khi đăng nhập */}
-                        {dataUserLogin ?
-                            <Comments currentUserId={dataUserLogin.id} />
+                        {LocalUserLogin ?
+                            <Comments currentUserId={LocalUserLogin.id} />
                             :
                             <Comments />                            
                         }

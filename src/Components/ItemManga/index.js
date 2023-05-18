@@ -5,7 +5,7 @@ import { BookOpenIcon } from "../Icon";
 import Button from "../Button";
 import { WindowScrollTop } from "../../util";
 
-function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data = {} }) {
+function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data = {}, rankingIndex }) {
     let Comp = "div";
     const props = {};
     if (to) {
@@ -53,11 +53,11 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
 
     }
 
-    if (type === "ranking") {
-        arrStylesWrapper.push(styles.wrapperRanking);
-    } else if (type == "seasonalComics") {
-        arrStylesWrapper.push(styles.wrapperSeason);
-    }
+    // if (type === "ranking") {
+    //     arrStylesWrapper.push(styles.wrapperRanking);
+    // } else if (type == "seasonalComics") {
+    //     arrStylesWrapper.push(styles.wrapperSeason);
+    // }
 
     let classesWrapper = clsx(arrStylesWrapper, {
         [styles.wrapperPrimary]: true,
@@ -91,7 +91,7 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
                     </h3>
                     <div className={clsx(styles.infoBottom)}>
                         <p className={clsx(styles.infoEpisodeName)}>{data && "Chap " + data.chapter_lastest}</p>
-                        <p className={clsx(styles.infoEpisodeView)}><span>{data.view_count}</span> lượt xem</p>
+                        <p className={clsx(styles.infoEpisodeView)}><span>{data.count_views}</span> lượt xem</p>
                     </div>
                 </div>
                 <div className={coming ? clsx(styles.itemProgress, styles.comingSoon) : complete ? clsx(styles.itemProgress, styles.complete) : clsx(styles.hidden)}>
@@ -101,6 +101,11 @@ function ItemManga({ to, href, onClick, complete, coming, setColumn, type, data 
                     <BookOpenIcon className={clsx(styles.itemPlayIcon)} />
                 </div>
             </div>
+            {type === "ranking" &&
+                <div className={clsx(styles.rankingIndex)}>
+                    {rankingIndex + 1 ?? ""}                    
+                </div>
+            }
         </Comp>
     );
 }

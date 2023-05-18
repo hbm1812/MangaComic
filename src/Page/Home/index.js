@@ -39,7 +39,7 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
 
     // data chapter 
-    
+
 
     // console.log("dataRecommendIndex", dataRecommendIndex)
 
@@ -260,6 +260,9 @@ export default function Home() {
                 </Heading>
                 {dataMangaRecommend.map((item, index) => {
                     let findCategory = dataCategoryInStory.filter((itemCate) => itemCate.story_id === item.id)
+                    let getSatisfied = 0;
+                    getSatisfied = (item.count_favorites / item.count_views * 100).toPrecision(4);                    
+
                     return (
                         <div className={clsx(styles.recommend)} key={index}>
                             <div className={clsx(styles.banner)}>
@@ -280,14 +283,14 @@ export default function Home() {
                                         <div className={clsx(styles.satisfied)}>
                                             <FaceSmileIcon className={clsx(styles.icon)} />
                                             <p>
-                                                2000
+                                                {getSatisfied}%
                                                 {/* {item.satisfied}% */}
                                             </p>
                                         </div>
                                         <div className={clsx(styles.favorite)}>
                                             <HeartIcon className={clsx(styles.icon)} />
                                             <p>
-                                                1000
+                                                {item.count_favorites}
                                                 {/* {item.favorite} */}
                                             </p>
                                         </div>
@@ -337,7 +340,7 @@ export default function Home() {
                         <div className={clsx(styles.wrapper)}>
                             {dataManga.map((item, index) => {
                                 return (
-                                    <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`}/>
+                                    <ItemManga setColumn={6} data={item} key={index} to={`/manga/detail/${item.keyword}/${item.id}`} />
                                 )
                             })}
                         </div>

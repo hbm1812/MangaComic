@@ -46,6 +46,19 @@ const GlobalContext = React.createContext({
     selectedIdCharacter: -1,
     setSelectedIdCharacter: () => {},
 
+    // comment 
+    showInputClone: false,
+    setShowInputClone: () => {},    
+
+    // save image in sub comment 
+    saveImageSubComment: "",
+    setSaveImageSubComment: () => {},
+
+    // find manga detail 
+    saveNameStatus: "",
+    setSaveNameStatus: () => {},
+    saveCategory: "",
+    setSaveCategory: () => {},
 })
 
 export default GlobalContext;

@@ -16,6 +16,11 @@ function ContextWrapper(props) {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const [toggleSidebarInfoUser, setToggleSidebarInfoUser] = useState(false);
     const [selectedIdCharacter, setSelectedIdCharacter] = useState(-1);
+    const [showInputClone, setShowInputClone] = useState(false);
+    const [saveImageSubComment, setSaveImageSubComment] = useState("");
+    const [saveNameStatus, setSaveNameStatus] = useState("");
+    const [saveCategory, setSaveCategory] = useState("");
+
 
 
     // combobox
@@ -54,6 +59,16 @@ function ContextWrapper(props) {
                 // character id show detail 
                 selectedIdCharacter,
                 setSelectedIdCharacter,
+                // comment
+                showInputClone,
+                setShowInputClone,
+                saveImageSubComment,
+                setSaveImageSubComment,
+                // find manga detail 
+                saveNameStatus,
+                setSaveNameStatus,
+                saveCategory,
+                setSaveCategory,
             }}>
             {props.children}
         </GlobalContext.Provider>

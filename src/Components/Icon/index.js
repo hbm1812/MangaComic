@@ -30,6 +30,7 @@ import {
     faTableCellsLarge,
     faArrowsToEye,
     faCalendar,
+    faPowerOff,
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -429,6 +430,15 @@ function CalendarIcon({ className, onClick }) {
     );
 }
 
+function PowerOffIcon({ className, onClick }) {
+    const props = {
+        onClick,
+    };
+    return (
+        <FontAwesomeIcon icon={faPowerOff} className={className} {...props} />
+    );
+}
+
 // react icons (fail)
 function FillLayout({ className, onClick, width = "50px", height = "50px" }) {
     const props = {
@@ -502,4 +512,5 @@ export {
     ArrowsToEyeIcon,
     NewsPaperIcon,
     CalendarIcon,
+    PowerOffIcon,
 };

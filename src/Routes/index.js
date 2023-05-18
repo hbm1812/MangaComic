@@ -13,6 +13,7 @@ import ReadManga from "../Page/ReadManga";
 import Error404 from "../Page/Error404";
 import Test from "../Page/Test";
 import Register from "../Page/Register";
+import Ranking from "../Page/Ranking";
 
 // pages admin
 import Dashboard from "../Page/Admin/Dashboard";
@@ -63,6 +64,10 @@ const publicRoutes = [
         path: ":nameManga/:idChapter",
         component: ReadManga,
     }},
+
+    // ranking page
+    { path: "/ranking", component: Ranking },    
+
 
 
     // admin
