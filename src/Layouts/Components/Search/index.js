@@ -61,46 +61,7 @@ function Search() {
             .catch(() => {
                 console.log("error")
                 setLoading(false);                
-            })
-
-        // const fetchApi = async () => {
-        //     setLoading(true);
-
-        //     const result = await services.search(debounced);
-        //     setSearchResult(result);
-
-        //     setLoading(false);
-        // }
-        
-        // fetchApi();
-        // using axios
-        // const fetchApi = async () => {
-        //     try {
-        //         const res = await request.get(`users/search`, {
-        //             params: {
-        //                 q: debounced,
-        //                 type: "less"
-        //             }
-        //         })
-        //         setSearchResult(res.data)
-        //         setLoading(false);
-        //     } catch (error) {
-        //         setLoading(false);
-        //     }
-        // }
-        // fetchApi();     
-        
-        // fetch api
-        // fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(debounced)}&type=less`)
-        //     .then(res => res.json())
-        //     .then(res => {
-        //         setSearchResult(res.data)
-        //         setLoading(false);
-        //     })
-
-        //     .catch(() => {
-        //         setLoading(false);  
-        //     })
+            })        
 
     }, [debounced])
 

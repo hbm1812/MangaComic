@@ -28,7 +28,7 @@ function ItemMangaSearch({ data, onClick }) {
                 console.log("error")
             })
     }, [])
-    const filterData = dataManga.filter((item) => item.keyword === data.keyword)
+    const filterData = dataManga.length > 0 && dataManga.filter((item) => item.keyword === data.keyword)
 
     // console.log("datadatadataa", filterData)
     return (
@@ -45,7 +45,7 @@ function ItemMangaSearch({ data, onClick }) {
             </div>
             <div className={clsx(styles.sreachResultItemDesc)}>
                 <h4 className={clsx(styles.sreachResultItemName)}>{data.name}</h4>
-                <h5 className={clsx(styles.sreachResultItemView)}>{filterData[0].count_views} lượt xem</h5>
+                <h5 className={clsx(styles.sreachResultItemView)}>{filterData.length > 0 && filterData[0].count_views} lượt xem</h5>
             </div>
         </Link></div>
     );
